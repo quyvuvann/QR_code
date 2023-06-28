@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:fitsSystemWindows="true"
+        android:id="@+id/drawer_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F4EFDE"
+            android:fitsSystemWindows="true"
+            tools:context=".activity.MainActivity">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navigationIcon="@drawable/ic_menu_drawer" />
+
+            <TextView
+                android:id="@+id/btn_camera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_20"
+                android:layout_marginTop="@dimen/dimens_100"
+                android:layout_marginEnd="@dimen/dimens_20"
+                android:background="@drawable/ripple_effect"
+                android:gravity="center"
+                android:padding="@dimen/dimens_10"
+                android:text="@string/camera"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/btn_gallery"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_20"
+                android:layout_marginTop="@dimen/dimens_100"
+                android:layout_marginEnd="@dimen/dimens_20"
+                android:background="@drawable/ripple_effect_button"
+                android:gravity="center"
+                android:padding="@dimen/dimens_10"
+                android:text="@string/gallery"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/view"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_viewQR"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="@dimen/dimens_20"
+                android:layout_marginTop="@dimen/dimens_10"
+                app:layout_constraintBottom_toTopOf="@+id/btn_start"
+                app:layout_constraintTop_toBottomOf="@+id/btn_camera"
+                tools:ignore="UnknownIdInLayout"
+                tools:src="@drawable/ic_qrcode" />
+
+            <TextView
+                android:id="@+id/btn_scan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_20"
+                android:layout_marginTop="@dimen/dimens_20"
+                android:layout_marginEnd="@dimen/dimens_20"
+                android:background="@drawable/ripple_effect_scan"
+                android:gravity="center"
+                android:padding="@dimen/dimens_10"
+                android:text="@string/scan"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimens_20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_viewQR" />
+
+            <TextView
+                android:background="?selectableItemBackground"
+                android:id="@+id/txt_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_10"
+                android:hint="@string/result"
+                android:padding="@dimen/dimens_10"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/btn_scan" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.navigation.NavigationView
+
+            android:layout_width="@dimen/dimens_260"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_marginTop="@dimen/dimens_30"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/img_nav"
+                    android:layout_width="@dimen/dimens_150"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_nav"
+                    android:layout_marginTop="@dimen/dimens_20"
+                    android:id="@+id/rcv_nav"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.navigation.NavigationView>
+    </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.example.example_qr_code.base.XToolbar
+            android:paddingTop="@dimen/dimens_30"
+            android:background="#8FE8E1"
+            app:xtb_colorTitle="@color/black"
+            app:xtb_title="@string/Create"
+            android:id="@+id/x_toolBar"
+            app:xtb_iconRight="@drawable/ic_check"
+            app:xtb_iconLeft="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/img_view"
+            android:layout_marginStart="@dimen/dimens_25"
+            android:src="@drawable/ic_wifi"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/dimens_20"
+            app:layout_constraintTop_toBottomOf="@+id/x_toolBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginStart="@dimen/dimens_10"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/dimens_16"
+            app:layout_constraintBottom_toBottomOf="@+id/img_view"
+            android:text="@string/wifi"
+            app:layout_constraintTop_toTopOf="@+id/img_view"
+            app:layout_constraintStart_toEndOf="@+id/img_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/edt_name_wifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_16"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:background="@drawable/bg_text"
+            android:hint="@string/name_wf"
+            android:paddingStart="@dimen/dimens_16"
+            android:paddingTop="@dimen/dimens_16"
+            android:paddingBottom="@dimen/dimens_16"
+            android:textColorHint="#D8CECE"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_view" />
+
+        <EditText
+            android:id="@+id/edt_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_16"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:background="@drawable/bg_text"
+            android:hint="@string/password"
+            android:paddingStart="@dimen/dimens_16"
+            android:paddingTop="@dimen/dimens_16"
+            android:paddingBottom="@dimen/dimens_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_name_wifi"/>
+
+      <com.google.android.material.textfield.TextInputLayout
+          android:layout_marginTop="@dimen/dimens_10"
+          android:id="@+id/txt_input"
+          android:layout_marginStart="@dimen/dimens_16"
+          app:layout_constraintTop_toBottomOf="@+id/edt_password"
+
+          style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+          <AutoCompleteTextView
+              android:id="@+id/dropdown_menu"
+              android:inputType="none"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+      </com.google.android.material.textfield.TextInputLayout>
+        <CheckBox
+            android:id="@+id/chk_hint"
+            android:layout_marginStart="@dimen/dimens_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginStart="-5dp"
+            android:textSize="@dimen/dimens_16"
+            android:layout_marginTop="@dimen/dimens_13"
+            app:layout_constraintTop_toBottomOf="@+id/txt_input"
+            app:layout_constraintStart_toEndOf="@+id/chk_hint"
+            android:text="@string/hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

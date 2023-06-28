@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+    </data>
+
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            tools:context=".activity.CreateActivity">
+
+            <com.example.example_qr_code.base.XToolbar
+                android:paddingTop="@dimen/dimens_30"
+                android:id="@+id/x_toolBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#8FE8E1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:xtb_colorTitle="@color/black"
+                app:xtb_iconLeft="@drawable/ic_menu_drawer"
+                app:xtb_iconRight="@drawable/ic_more"
+                app:xtb_title="@string/Create"
+                app:xtb_visibilityTitle="visible" />
+
+            <TextView
+                android:id="@+id/txt_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_20"
+                android:layout_marginTop="@dimen/dimens_10"
+                android:text="@string/Create"
+                android:textSize="@dimen/dimens_20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/x_toolBar" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_5"
+                android:layout_marginTop="@dimen/dimens_10"
+                android:layout_marginEnd="@dimen/dimens_5"
+                app:cardCornerRadius="@dimen/dimens_10"
+                app:cardElevation="@dimen/dimens_10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_view">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_create"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_view"
+                    tools:listitem="@layout/layout_item_create" />
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.navigation.NavigationView
+
+            android:layout_width="@dimen/dimens_260"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/img_nav"
+                    android:layout_width="@dimen/dimens_150"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_30"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_nav"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/dimens_20"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_nav" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.navigation.NavigationView>
+    </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

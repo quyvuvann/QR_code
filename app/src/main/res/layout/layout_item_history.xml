@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.example_qr_code.QrModel" />
+        <variable
+            name="position"
+            type="Integer" />
+        <variable
+            name="itemListener"
+            type="com.example.example_qr_code.adapter.HistoryAdapter.IListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="@dimen/dimens_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@{item.titleTimeString}"
+            android:id="@+id/txt_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_10"
+            android:layout_marginTop="@dimen/dimens_10"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="12 th 6, 2023" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_marginStart="@dimen/dimens_5"
+            android:layout_marginEnd="@dimen/dimens_5"
+            app:cardElevation="@dimen/dimens_5"
+            android:layout_marginTop="@dimen/dimens_5"
+            app:cardCornerRadius="@dimen/dimens_10"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimens_80"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_date">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:background="?selectableItemBackground"
+                android:onClick="@{() -> itemListener.onClick(item)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/img_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_10"
+                    android:src="@drawable/ic_link"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_20"
+                    android:text="@{item.titleString}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimens_18"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/txt_time"
+                    app:layout_constraintStart_toEndOf="@+id/img_link"
+                    tools:text="@string/lienKet" />
+
+                <TextView
+                    android:id="@+id/txt_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_20"
+                    android:text="@{item.timeString}"
+                    android:textSize="@dimen/dimens_16"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/img_link"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="12/06/2023 22:30:59" />
+
+                <TextView
+                    android:id="@+id/txt_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_20"
+                    android:text="@{item.linkString}"
+                    android:textSize="@dimen/dimens_16"
+                    app:layout_constraintStart_toEndOf="@+id/img_link"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_time"
+                    tools:text="@string/link" />
+
+                <ImageView
+                    android:background="?selectableItemBackground"
+                    android:onClick="@{() -> itemListener.onClickDelete(item,position)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimens_10"
+                    android:src="@drawable/ic_clear"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/ic_clear" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

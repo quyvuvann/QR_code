@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="XToolbar">
+        <attr name="xtb_title" format="string" />
+        <attr name="xtb_colorTitle" format="color" />
+
+        <attr name="xtb_visibilityTitle" format="integer">
+            <flag name="visible" value="0" />
+            <flag name="invisible" value="4" />
+            <flag name="gone" value="8" />
+        </attr>
+
+        <attr name="xtb_visibilityRight" format="integer">
+            <flag name="visible" value="0" />
+            <flag name="invisible" value="4" />
+            <flag name="gone" value="8" />
+        </attr>
+
+        <attr name="xtb_visibilityLeft" format="integer">
+            <flag name="visible" value="0" />
+            <flag name="invisible" value="4" />
+            <flag name="gone" value="8" />
+        </attr>
+
+        <attr name="xtb_iconRight" format="reference" />
+        <attr name="xtb_iconLeft" format="reference" />
+        <attr name="xtb_background" format="color" />
+
+    </declare-styleable>
+</resources>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:fitsSystemWindows="true"
+            android:id="@+id/drawer_Layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#F4EFDE"
+                android:fitsSystemWindows="true"
+                tools:context=".activity.HistoryActivity">
+
+                <com.example.example_qr_code.base.XToolbar
+                    app:xtb_colorTitle="@color/black"
+                    app:xtb_title="@string/History"
+                    app:xtb_iconLeft="@drawable/ic_menu_drawer"
+                    app:xtb_iconRight="@drawable/ic_more"
+                    android:id="@+id/x_toolBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/rcv_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+
+                    tools:listitem="@layout/layout_item_history"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/x_toolBar" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.navigation.NavigationView
+
+                android:layout_width="@dimen/dimens_260"
+                android:layout_height="match_parent"
+                android:layout_gravity="start">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_marginTop="@dimen/dimens_30"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:id="@+id/img_nav"
+                        android:layout_width="@dimen/dimens_150"
+                        android:layout_height="wrap_content"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/img_nav"
+                        android:layout_marginTop="@dimen/dimens_20"
+                        android:id="@+id/rcv_nav"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:overScrollMode="never"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.navigation.NavigationView>
+        </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

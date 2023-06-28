@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_marginStart="@dimen/dimens_10"
+            android:id="@+id/btn_left"
+            android:src="@drawable/ic_menu_drawer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/txt_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/dimens_20"
+            android:textColor="@color/black"
+            android:text="@string/History"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/btn_right"
+            android:src="@drawable/ic_more"
+            android:layout_marginEnd="@dimen/dimens_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:visibility="gone"
+            android:src="@drawable/ic_baseline_filter_list_off_24"
+            android:layout_marginEnd="@dimen/dimens_30"
+            app:layout_constraintEnd_toStartOf="@+id/btn_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/btn_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

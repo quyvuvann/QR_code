@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/selectStyleFragment"
+    >
+
+    <fragment
+        tools:layout="@layout/fragment_select_style"
+        android:id="@+id/selectStyleFragment"
+        android:name="com.example.example_qr_code.fragment.SelectStyleFragment"
+        android:label="SelectStyleFragment" >
+        <action
+            android:id="@+id/action_selectStyleFragment_to_createdWebFragment"
+            app:destination="@id/createdWebFragment" />
+        <action
+            android:id="@+id/action_selectStyleFragment_to_createdDocumentFragment"
+            app:destination="@id/createdDocumentFragment" />
+        <action
+            android:id="@+id/action_selectStyleFragment_to_createdContactFragment"
+            app:destination="@id/createdContactFragment" />
+        <action
+            android:id="@+id/action_selectStyleFragment_to_createdEmailFragment"
+            app:destination="@id/createdEmailFragment" />
+        <action
+            android:id="@+id/action_selectStyleFragment_to_createdSMSFragment"
+            app:destination="@id/createdSMSFragment" />
+        <action
+            android:id="@+id/action_selectStyleFragment_to_createdPhoneFragment"
+            app:destination="@id/createdPhoneFragment" />
+        <action
+            android:id="@+id/action_selectStyleFragment_to_createdWifiFragment"
+            app:destination="@id/createdWifiFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_create_web"
+        android:id="@+id/createdWebFragment"
+        android:name="com.example.example_qr_code.fragment.CreatedWebFragment"
+        android:label="CreatedWebFragment" >
+        <action
+            android:id="@+id/action_createdWebFragment_to_showQrCodeFragment"
+            app:destination="@id/showQrCodeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_create_document"
+        android:id="@+id/createdDocumentFragment"
+        android:name="com.example.example_qr_code.fragment.CreatedDocumentFragment"
+        android:label="CreatedDocumentFragment" >
+        <action
+            android:id="@+id/action_createdDocumentFragment_to_showQrCodeFragment"
+            app:destination="@id/showQrCodeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_create_contact"
+        android:id="@+id/createdContactFragment"
+        android:name="com.example.example_qr_code.fragment.CreatedContactFragment"
+        android:label="CreatedContactFragment" >
+        <action
+            android:id="@+id/action_createdContactFragment_to_showQrCodeFragment"
+            app:destination="@id/showQrCodeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_create_email"
+        android:id="@+id/createdEmailFragment"
+        android:name="com.example.example_qr_code.fragment.CreatedEmailFragment"
+        android:label="CreatedEmailFragment" >
+        <action
+            android:id="@+id/action_createdEmailFragment_to_showQrCodeFragment"
+            app:destination="@id/showQrCodeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_create_sms"
+        android:id="@+id/createdSMSFragment"
+        android:name="com.example.example_qr_code.fragment.CreatedSMSFragment"
+        android:label="CreatedSMSFragment" >
+        <action
+            android:id="@+id/action_createdSMSFragment_to_showQrCodeFragment"
+            app:destination="@id/showQrCodeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_create_phone"
+        android:id="@+id/createdPhoneFragment"
+        android:name="com.example.example_qr_code.fragment.CreatedPhoneFragment"
+        android:label="CreatedPhoneFragment" >
+        <action
+            android:id="@+id/action_createdPhoneFragment_to_showQrCodeFragment"
+            app:destination="@id/showQrCodeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_create_wifi"
+        android:id="@+id/createdWifiFragment"
+        android:name="com.example.example_qr_code.fragment.CreatedWifiFragment"
+        android:label="CreatedWifiFragment" >
+        <action
+            android:id="@+id/action_createdWifiFragment_to_showQrCodeFragment"
+            app:destination="@id/showQrCodeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_show_qrcode"
+        android:id="@+id/showQrCodeFragment"
+        android:name="com.example.example_qr_code.fragment.ShowQrCodeFragment"
+        android:label="ShowQrCodeFragment" />
+</navigation>

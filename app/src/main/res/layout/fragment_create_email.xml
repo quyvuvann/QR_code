@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.example.example_qr_code.base.XToolbar
+            android:paddingTop="@dimen/dimens_30"
+            android:background="#8FE8E1"
+            app:xtb_colorTitle="@color/black"
+            app:xtb_title="@string/Create"
+            android:id="@+id/x_toolBar"
+            app:xtb_iconRight="@drawable/ic_check"
+            app:xtb_iconLeft="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/img_view"
+            android:layout_marginStart="@dimen/dimens_25"
+            android:src="@drawable/ic_email"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/dimens_10"
+            app:layout_constraintTop_toBottomOf="@+id/x_toolBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginStart="@dimen/dimens_10"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/dimens_16"
+            app:layout_constraintBottom_toBottomOf="@+id/img_view"
+            android:text="@string/email"
+            app:layout_constraintTop_toTopOf="@+id/img_view"
+            app:layout_constraintStart_toEndOf="@+id/img_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_16"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:background="@drawable/bg_text"
+            android:hint="@string/email"
+            android:paddingStart="@dimen/dimens_16"
+            android:paddingTop="@dimen/dimens_16"
+            android:paddingBottom="@dimen/dimens_16"
+            android:textColorHint="#D8CECE"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_view" />
+
+        <EditText
+            android:id="@+id/edt_topic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_16"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:background="@drawable/bg_text"
+            android:hint="@string/topic"
+            android:paddingStart="@dimen/dimens_16"
+            android:paddingTop="@dimen/dimens_16"
+            android:paddingBottom="@dimen/dimens_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_email"/>
+
+        <EditText
+            android:gravity="top"
+            android:id="@+id/edt_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_250"
+            android:layout_marginStart="@dimen/dimens_16"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:background="@drawable/bg_text"
+            android:hint="@string/content"
+            android:paddingStart="@dimen/dimens_16"
+            android:paddingTop="@dimen/dimens_16"
+            android:paddingBottom="@dimen/dimens_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_topic" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
