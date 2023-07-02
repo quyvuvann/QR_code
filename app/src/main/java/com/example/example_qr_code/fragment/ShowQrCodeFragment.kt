@@ -53,8 +53,6 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
     override fun setupView() {
 
         val bitmapReceiver = dataViewModel.bitmap?.copy(Bitmap.Config.ARGB_8888, true)
-        Log.d("TAG", "setupView: ${viewModel.bitmap}")
-        Log.d("TAG", "setupView: ${bitmapReceiver}")
         Glide.with(activityOwner).load(bitmapReceiver).into(mBinding.imgQrcode)
         Glide.with(this).load(R.drawable.ic_qrcode).into(mBinding.imgNav)
         barCodeScannerOptions =
@@ -65,7 +63,8 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
         mBinding.btnFavorite.setOnClickListener {
             detectResultFromImage()
         }
-
+        Glide.with(activityOwner).load(dataViewModel.image).override(48).into(mBinding.imgView)
+        mBinding.txtTitle.setText(dataViewModel.titleCr!!)
 
     }
 
@@ -136,13 +135,18 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
 
             val inputImage = InputImage.fromFilePath(
                 activityOwner,
-                getImageUri(requireContext(), createBitmap(mBinding.cardView, activityOwner),number.toString())!!
+                getImageUri(
+                    requireContext(),
+                    createBitmap(mBinding.cardView, activityOwner),
+                    number.toString()
+                )!!
             )
-            val barCodeResult = barCodeScanner!!.process(inputImage).addOnSuccessListener { barcodes ->
-                extractBarcodeQrCodeInfo(barcodes)
-            }.addOnFailureListener { e ->
-                Toast.makeText(activityOwner, "errorListener", Toast.LENGTH_SHORT).show()
-            }
+            val barCodeResult =
+                barCodeScanner!!.process(inputImage).addOnSuccessListener { barcodes ->
+                    extractBarcodeQrCodeInfo(barcodes)
+                }.addOnFailureListener { e ->
+                    Toast.makeText(activityOwner, "errorListener", Toast.LENGTH_SHORT).show()
+                }
         } catch (e: java.lang.Exception) {
             Log.e("TAG", "detectResultFromImage: ${e.message}")
             Toast.makeText(activityOwner, "error", Toast.LENGTH_SHORT).show()
@@ -229,12 +233,30 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
                 Barcode.TYPE_CONTACT_INFO -> {
                     val typeContact = barcode.contactInfo
 
-                    val title = "${typeContact?.title}"
-                    val organization = "${typeContact?.organization}"
-                    val name = "${typeContact?.name?.first} ${typeContact?.name?.last}"
-                    val phone = "${typeContact?.name?.first} ${typeContact?.phones?.get(0)?.number}"
+                    val fullName = typeContact?.name?.formattedName
+                    val workPlace = typeContact?.organization
+                    val address = typeContact?.addresses?.joinToString("\n") { address ->
+                        address.addressLines.joinToString(", ")
+                    }
+
+                    val phoneNumber = typeContact?.phones?.firstOrNull()?.number
+                    val email = typeContact?.emails?.map { email ->
+                        email.address
+                    }?.joinToString("\n")
+                    val note = typeContact?.title
                     mBinding.txtResult.text =
-                        "TYPE_CONTACT_INFO \ntitle: $title \norganization: $organization \nname: $name \nphone: $phone \n\nrawValue: $rawValue"
+                        "TYPE_CONTACT_INFO \nfullName: $fullName \nworkPlace: $workPlace \n" +
+                                "Address: ${address} \n" +
+                                "Phone: $phoneNumber \n" +
+                                "Email: $email \n" +
+                                "Note: $note"
+                }
+                Barcode.TYPE_SMS ->{
+                    val typeContact = barcode.contactInfo
+                    val phone = typeContact?.phones?.firstOrNull()?.number
+                    val mess = typeContact?.title
+                    mBinding.txtResult.text =
+                        "TYPE_CONTACT_INFO \nphone: $phone \nmess: $mess"
                 }
                 else -> {
                     mBinding.txtResult.text = "rawValue: $rawValue"
@@ -257,7 +279,7 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
 
     }
 
-    fun getImageUri(inContext: Context, inImage: Bitmap,title: String): Uri? {
+    fun getImageUri(inContext: Context, inImage: Bitmap, title: String): Uri? {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path =

@@ -4,12 +4,13 @@ import android.graphics.Bitmap
 import androidx.annotation.DrawableRes
 import com.example.example_qr_code.base.BaseViewModel
 
-class CreateViewModel :BaseViewModel() {
+class CreateViewModel : BaseViewModel() {
 
-    var bitmap : Bitmap ?= null
+    var bitmap: Bitmap? = null
+
 
     enum class Tool {
-        WEB,DOCUMENT,CONTACT,EMAIL,SMS,PHONE,WIFI
+        WEB, DOCUMENT, CONTACT, EMAIL, SMS, PHONE, WIFI
 
     }
 
@@ -27,8 +28,9 @@ class CreateViewModel :BaseViewModel() {
         CreateItem(Tool.WIFI, R.drawable.ic_wifi, R.string.wifi)
     )
 
-    fun setBitmapCode(bitmap: Bitmap){
+    fun setBitmapCode(bitmap: Bitmap) {
         this.bitmap = bitmap
     }
+
 
 }

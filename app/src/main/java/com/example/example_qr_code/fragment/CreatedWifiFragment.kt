@@ -2,6 +2,7 @@ package com.example.example_qr_code.fragment
 
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.example_qr_code.CreateViewModel
@@ -55,7 +56,13 @@ class CreatedWifiFragment : BaseFragment<FragmentCreateWifiBinding, CreateViewMo
             val encode = BarcodeEncoder()
             val bitmap = encode.createBitmap(matrix)
             dataViewModel.setImageBitmap(bitmap)
-            findNavController().navigate(R.id.action_createdWifiFragment_to_showQrCodeFragment)
+            dataViewModel.setDataQrcode(R.drawable.ic_wifi, R.string.wifi)
+            if (netWorkName.isEmpty() || typeWifi.isEmpty()) {
+                Toast.makeText(activityOwner, "cannot be left blank", Toast.LENGTH_SHORT).show()
+            } else {
+                findNavController().navigate(R.id.action_createdWifiFragment_to_showQrCodeFragment)
+            }
+
         } catch (e: Exception) {
 
         }

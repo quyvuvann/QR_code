@@ -9,6 +9,8 @@ class DataViewModel : BaseViewModel(){
     var bitmap:Bitmap ?= null
     var uri : Uri ?= null
     var uriShow :Uri ?= null
+    var image: Int? = null
+    var titleCr: Int? = null
 
     fun setImageBitmap(bitmap: Bitmap){
         this.bitmap =bitmap
@@ -18,5 +20,9 @@ class DataViewModel : BaseViewModel(){
     }
     fun setUriShoww(uri: Uri){
         this.uriShow = uri
+    }
+    fun setDataQrcode(image:Int,title:Int){
+        this.image = image
+        this.titleCr = title
     }
 }

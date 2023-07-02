@@ -1,5 +1,6 @@
 package com.example.example_qr_code.fragment
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Looper
 import android.util.Log
@@ -30,6 +31,7 @@ class CreatedWebFragment : BaseFragment<FragmentCreateWebBinding, CreateViewMode
 
     }
 
+    @SuppressLint("SimpleDateFormat")
     override fun listener() {
         val c = Calendar.getInstance()
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
@@ -59,7 +61,7 @@ class CreatedWebFragment : BaseFragment<FragmentCreateWebBinding, CreateViewMode
                         )
                     )
                 }
-
+                dataViewModel.setDataQrcode(R.drawable.ic_link,R.string.lienKet)
 
                 findNavController().navigate(R.id.action_createdWebFragment_to_showQrCodeFragment)
             }, 200)
