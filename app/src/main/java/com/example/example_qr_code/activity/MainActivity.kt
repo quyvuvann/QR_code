@@ -176,17 +176,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     )
                     mBinding.txtResult.text =
                         "TYPE_WIFI \nssid:$ssid \npassword: $password \nencryptionType: $encryptionType \n\nrawValue:$rawValue"
-                    lifecycleScope.launch {
-                        val daoQr = QrRoomDatabase.getDataBase(this@MainActivity).qrDao()
-                        daoQr.insertQr(
-                            QrModel(
-                                titleTimeString = date,
-                                titleString = "Wifi",
-                                timeString = strDate,
-                                linkString = password
-                            )
-                        )
-                    }
+//                    lifecycleScope.launch {
+//                        val daoQr = QrRoomDatabase.getDataBase(this@MainActivity).qrDao()
+//                        daoQr.insertQr(
+//                            QrModel(
+//                                imageString = R.drawable.ic_wifi,
+//                                titleTimeString = date,
+//                                titleString = "Wifi",
+//                                timeString = strDate,
+//                                linkString = password
+//
+//                            )
+//                        )
+//                    }
 
                 }
                 Barcode.TYPE_URL -> {
@@ -197,14 +199,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                         "TYPE_URL \ntitle: $title \nurl: $url \n\nrawValue: $rawValue"
                     lifecycleScope.launch {
                         val daoQr = QrRoomDatabase.getDataBase(this@MainActivity).qrDao()
-                        daoQr.insertQr(
-                            QrModel(
-                                titleTimeString = date,
-                                titleString = "Liên kết web",
-                                timeString = strDate,
-                                linkString = url
-                            )
-                        )
+//                        daoQr.insertQr(
+//                            QrModel(
+//                                imageString = R.drawable.ic_link,
+//                                titleTimeString = date,
+//                                titleString = "Liên kết web",
+//                                timeString = strDate,
+//                                linkString = url
+//                            )
+//                        )
                     }
                     uri = Uri.parse(url)
                 }

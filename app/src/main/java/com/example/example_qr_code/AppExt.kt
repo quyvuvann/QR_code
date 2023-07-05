@@ -1,5 +1,6 @@
 package com.example.example_qr_code
 
+
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.widget.ImageView
@@ -10,6 +11,7 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 
@@ -43,4 +45,12 @@ fun generateQRCode(data: String): Bitmap? {
     }
 
     return null
+}
+
+fun bitmapTOString(bitmap: Bitmap): String {
+    val stream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+    val byteArray: ByteArray = stream.toByteArray()
+    val result: String = android.util.Base64.encodeToString(byteArray, android.util.Base64.DEFAULT)
+    return result
 }

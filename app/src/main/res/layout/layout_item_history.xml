@@ -52,11 +52,12 @@
                 android:layout_height="match_parent">
 
                 <ImageView
+                    app:loadImg="@{item.imageString}"
                     android:id="@+id/img_link"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_marginStart="@dimen/dimens_10"
-                    android:src="@drawable/ic_link"
+                    tools:src="@drawable/ic_link"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

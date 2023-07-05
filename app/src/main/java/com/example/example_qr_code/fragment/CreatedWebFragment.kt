@@ -7,10 +7,7 @@ import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.example_qr_code.CreateViewModel
-import com.example.example_qr_code.QrModel
-import com.example.example_qr_code.QrRoomDatabase
-import com.example.example_qr_code.R
+import com.example.example_qr_code.*
 import com.example.example_qr_code.base.BaseFragment
 import com.example.example_qr_code.databinding.FragmentCreateWebBinding
 import com.example.example_qr_code.databinding.FragmentSelectStyleBinding
@@ -38,33 +35,49 @@ class CreatedWebFragment : BaseFragment<FragmentCreateWebBinding, CreateViewMode
         val strDate: String = sdf.format(c.time)
         val dateFormat = SimpleDateFormat("dd-MM-yyyy")
         val date: String = dateFormat.format(c.time)
+
+
         mBinding.xToolBar.setToolbarClickListener(clickLeft = {
             onBackPressed()
         }, clickRight = {
-            android.os.Handler(Looper.getMainLooper()).postDelayed({
-                val text = mBinding.editText.text.toString().trim()
-                val writer = MultiFormatWriter()
+            val url = mBinding.editText.text.toString().trim()
+            Log.d("TAG", "listener: $url")
+            val data = "URL:$url"
+            val bitmap = generateQRCode(data)
 
-                val matrix = writer.encode(text, BarcodeFormat.QR_CODE, 500, 500)
-                val encode = BarcodeEncoder()
-                val bitmap = encode.createBitmap(matrix)
-                Log.d("TAG", "setupVieww: $bitmap")
-                dataViewModel.setImageBitmap(bitmap.copy(Bitmap.Config.ARGB_8888, true))
-                lifecycleScope.launch{
-                    val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
-                    daoQr.insertQr(
-                        QrModel(
-                            titleTimeString = date,
-                            titleString = "Wifi",
-                            timeString = strDate,
-                            linkString = text
-                        )
+            dataViewModel.setImageBitmap(bitmap!!.copy(Bitmap.Config.ARGB_8888, true))
+            lifecycleScope.launch {
+                val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
+                daoQr.insertQr(
+                    QrModel(
+                        imageString = R.drawable.ic_link,
+                        imageBitmap = bitmapTOString(bitmap),
+                        titleTimeString = date,
+                        titleString = "Web link",
+                        timeString = strDate,
+                        linkString = url,
+                        phone = "",
+                        message = "",
+                        email = "",
+                        topic = "",
+                        content = "",
+                        document = "",
+                        fullName = "",
+                        workPlace = "",
+                        address = "",
+                        note = "",
+                        networkName = "",
+                        password = "",
+                        typeWifi = "",
+                        latitude = "",
+                        longitude = "",
+                        query = ""
                     )
-                }
-                dataViewModel.setDataQrcode(R.drawable.ic_link,R.string.lienKet)
+                )
+            }
+            dataViewModel.setDataQrcode(R.drawable.ic_link, R.string.lienKet)
 
-                findNavController().navigate(R.id.action_createdWebFragment_to_showQrCodeFragment)
-            }, 200)
+            findNavController().navigate(R.id.action_createdWebFragment_to_showQrCodeFragment)
 
 
         })

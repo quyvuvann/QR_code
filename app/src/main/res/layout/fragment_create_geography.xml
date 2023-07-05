@@ -26,7 +26,7 @@
         <ImageView
             android:id="@+id/img_view"
             android:layout_marginStart="@dimen/dimens_25"
-            android:src="@drawable/ic_sms"
+            android:src="@drawable/ic_location"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="@dimen/dimens_10"
             app:layout_constraintTop_toBottomOf="@+id/x_toolBar"
@@ -38,20 +38,19 @@
             android:textStyle="bold"
             android:textSize="@dimen/dimens_16"
             app:layout_constraintBottom_toBottomOf="@+id/img_view"
-            android:text="@string/sms"
+            android:text="@string/geography"
             app:layout_constraintTop_toTopOf="@+id/img_view"
             app:layout_constraintStart_toEndOf="@+id/img_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <EditText
+            android:id="@+id/edt_latitude"
             android:inputType="number"
-            android:textColorHint="#D8CECE"
-            android:id="@+id/edt_phone_number"
             android:layout_marginTop="@dimen/dimens_25"
             android:paddingStart="@dimen/dimens_16"
             android:paddingBottom="@dimen/dimens_16"
             android:background="@drawable/bg_text"
-            android:hint="@string/phone_number"
+            android:hint="@string/latitude"
             android:layout_marginEnd="@dimen/dimens_16"
             android:layout_marginStart="@dimen/dimens_16"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,27 +60,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-
-
         <EditText
-            android:gravity="top"
-            android:id="@+id/edt_mess"
+            android:id="@+id/edt_longitude"
+            android:inputType="number"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_250"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimens_16"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="@dimen/dimens_16"
             android:background="@drawable/bg_text"
-            android:hint="@string/message"
+            android:hint="@string/longitude"
             android:paddingStart="@dimen/dimens_16"
             android:paddingTop="@dimen/dimens_16"
             android:paddingBottom="@dimen/dimens_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_phone_number" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/edt_latitude"/>
+        <EditText
+            android:id="@+id/edit_query"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_16"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:background="@drawable/bg_text"
+            android:hint="@string/query"
+            android:paddingStart="@dimen/dimens_16"
+            android:paddingTop="@dimen/dimens_16"
+            android:paddingBottom="@dimen/dimens_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_longitude"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

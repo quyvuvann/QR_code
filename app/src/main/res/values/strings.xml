@@ -35,4 +35,12 @@
     <string name="hint">Hint</string>
     <string name="save">Save</string>
     <string name="share">Share</string>
+    <string name="Wep">WEP</string>
+    <string name="wpa">WPA</string>
+    <string name="open">OPEN</string>
+    <string name="un_know">UNKNOWN</string>
+    <string name="geography">Geography</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="query">Query</string>
 </resources>

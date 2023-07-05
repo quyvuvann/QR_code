@@ -10,7 +10,7 @@ class CreateViewModel : BaseViewModel() {
 
 
     enum class Tool {
-        WEB, DOCUMENT, CONTACT, EMAIL, SMS, PHONE, WIFI
+        WEB, DOCUMENT, CONTACT, EMAIL, SMS, PHONE, WIFI,LOCATION
 
     }
 
@@ -25,7 +25,8 @@ class CreateViewModel : BaseViewModel() {
         CreateItem(Tool.EMAIL, R.drawable.ic_email, R.string.email),
         CreateItem(Tool.SMS, R.drawable.ic_sms, R.string.sms),
         CreateItem(Tool.PHONE, R.drawable.ic_phone, R.string.phone),
-        CreateItem(Tool.WIFI, R.drawable.ic_wifi, R.string.wifi)
+        CreateItem(Tool.WIFI, R.drawable.ic_wifi, R.string.wifi),
+        CreateItem(Tool.LOCATION, R.drawable.ic_location, R.string.geography)
     )
 
     fun setBitmapCode(bitmap: Bitmap) {

@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_selectStyleFragment_to_createdWifiFragment"
             app:destination="@id/createdWifiFragment" />
+        <action
+            android:id="@+id/action_selectStyleFragment_to_createdGeographyFragment"
+            app:destination="@id/createdGeographyFragment" />
     </fragment>
     <fragment
         tools:layout="@layout/fragment_create_web"
@@ -101,4 +104,13 @@
         android:id="@+id/showQrCodeFragment"
         android:name="com.example.example_qr_code.fragment.ShowQrCodeFragment"
         android:label="ShowQrCodeFragment" />
+    <fragment
+        tools:layout="@layout/fragment_create_geography"
+        android:id="@+id/createdGeographyFragment"
+        android:name="com.example.example_qr_code.fragment.CreatedGeographyFragment"
+        android:label="CreatedGeographyFragment" >
+        <action
+            android:id="@+id/action_createdGeographyFragment_to_showQrCodeFragment"
+            app:destination="@id/showQrCodeFragment" />
+    </fragment>
 </navigation>

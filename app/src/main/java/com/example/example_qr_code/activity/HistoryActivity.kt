@@ -23,6 +23,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
     private var navigationAdapter = NavigationAdapter()
     private var historyAdapter = HistoryAdapter()
     private var listDataHistory = mutableListOf<QrModel>()
+    val list = mutableListOf<QrModel>()
     override fun getLayoutId() = R.layout.activity_history
 
     override fun setUpView() {
@@ -32,9 +33,10 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
             val daoQr = QrRoomDatabase.getDataBase(this@HistoryActivity).qrDao()
             Log.d("TAG", "setUpViewlaunch: ${daoQr.getAllQr()}")
             listDataHistory = daoQr.getAllQr()
+            list.addAll(daoQr.getAllQr().sortedByDescending { it.timeString })
 
             mBinding.rcvView.adapter = historyAdapter
-            historyAdapter.submitList(daoQr.getAllQr())
+            historyAdapter.submitList(list)
 //            Log.d("TAG", "setUpView: ${daoQr.getAllQr()[0].timeString} | ${daoQr.getAllQr()[0].titleString} | ${daoQr.getAllQr()[0].linkString}")
         }
         Log.d("TAG", "setUpView: ${listDataHistory}")

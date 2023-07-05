@@ -82,6 +82,9 @@ class SelectStyleFragment : BaseFragment<FragmentSelectStyleBinding, NavigationV
                     CreateViewModel.Tool.WIFI -> {
                         findNavController().navigate(R.id.action_selectStyleFragment_to_createdWifiFragment)
                     }
+                    CreateViewModel.Tool.LOCATION ->{
+                        findNavController().navigate(R.id.action_selectStyleFragment_to_createdGeographyFragment)
+                    }
                     else -> {}
                 }
             }

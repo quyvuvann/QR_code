@@ -4,13 +4,12 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.example_qr_code.CreateViewModel
-import com.example.example_qr_code.R
+import com.example.example_qr_code.*
 import com.example.example_qr_code.base.BaseFragment
 import com.example.example_qr_code.databinding.FragmentCreateDocumentBinding
 import com.example.example_qr_code.databinding.FragmentCreateEmailBinding
-import com.example.example_qr_code.generateQRCode
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
@@ -18,7 +17,9 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import kotlinx.coroutines.launch
 import java.net.URLEncoder
+import java.text.SimpleDateFormat
 import java.util.*
 
 class CreatedEmailFragment : BaseFragment<FragmentCreateEmailBinding, CreateViewModel>() {
@@ -39,6 +40,11 @@ class CreatedEmailFragment : BaseFragment<FragmentCreateEmailBinding, CreateView
     }
 
     private fun initQrCode() {
+        val c = Calendar.getInstance()
+        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+        val strDate: String = sdf.format(c.time)
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+        val date: String = dateFormat.format(c.time)
         val email = mBinding.edtEmail.text.toString().trim()
         val topic = mBinding.edtTopic.text.toString().trim()
         val content = mBinding.edtContent.text.toString().trim()
@@ -49,6 +55,35 @@ class CreatedEmailFragment : BaseFragment<FragmentCreateEmailBinding, CreateView
         if (email.isEmpty()) {
             Toast.makeText(activityOwner, "cannot be left blank", Toast.LENGTH_SHORT).show()
         } else {
+            lifecycleScope.launch {
+                val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
+                daoQr.insertQr(
+                    QrModel(
+                        imageString = R.drawable.ic_phone,
+                        imageBitmap = bitmapTOString(bitmap!!),
+                        titleTimeString = date,
+                        titleString = "Phone",
+                        timeString = strDate,
+                        linkString = "" ,
+                        phone = "",
+                        message = "",
+                        email = email,
+                        topic = topic,
+                        content = content,
+                        document = "",
+                        fullName = "",
+                        workPlace = "",
+                        address = "",
+                        note = "",
+                        networkName = "",
+                        password = "",
+                        typeWifi = "",
+                        latitude = "",
+                        longitude = "",
+                        query = ""
+                    )
+                )
+            }
             findNavController().navigate(R.id.action_createdEmailFragment_to_showQrCodeFragment)
         }
 

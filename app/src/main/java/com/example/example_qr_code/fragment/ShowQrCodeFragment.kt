@@ -169,57 +169,35 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
                 Barcode.TYPE_WIFI -> {
 
                     val typeWifi = barcode.wifi
-                    val ssid = "${typeWifi?.ssid}"
-                    val password = "${typeWifi?.password}"
-                    var encryptionType = "${typeWifi?.encryptionType}"
-                    if (encryptionType == "1") {
-                        encryptionType = "OPEN"
-                    } else if (encryptionType == "2") {
-                        encryptionType = "WPA"
-                    } else if (encryptionType == "3") {
-                        encryptionType = "WEP"
+                    val ssid = typeWifi?.ssid
+                    val password = typeWifi?.password!!
+                    var encryptionType = typeWifi.encryptionType
+                    encryptionType = when (encryptionType) {
+                        1 -> R.string.open
+                        2 -> R.string.wpa
+                        3 -> R.string.wep
+                        else -> R.string.un_know
                     }
                     Log.d(
                         "TAG",
-                        "extractBarcodeQrCodeInfo:  \"TYPE_WIFI \\nssid:$ssid \\npassword: $password \\nencryptionType: $encryptionType \\n\\nrawValue:$rawValue\""
+                        "extractBarcodeQrCodeInfo:  \"TYPE_WIFI \\nssid:$ssid \\npassword: $password \\nencryptionType: $encryptionType "
                     )
                     mBinding.txtResult.text =
-                        "TYPE_WIFI \nssid:$ssid \npassword: $password \nencryptionType: $encryptionType \n\nrawValue:$rawValue"
-                    lifecycleScope.launch {
-                        val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
-                        daoQr.insertQr(
-                            QrModel(
-                                titleTimeString = date,
-                                titleString = "Wifi",
-                                timeString = strDate,
-                                linkString = password
-                            )
-                        )
-                    }
+                        "TYPE_WIFI \nssid:$ssid \npassword: $password \nencryptionType: $encryptionType"
+
 
                 }
                 Barcode.TYPE_URL -> {
 
-                    val typeUrl = barcode.url
-                    val title = "${typeUrl?.title}"
-                    val url = "${typeUrl?.url}"
+                    val url = barcode.url
+
+                    val title = url?.title
+                    val urlValue = url?.url
+
                     mBinding.txtResult.text =
-                        "TYPE_URL \ntitle: $title \nurl: $url \n\nrawValue: $rawValue"
-                    Log.d(
-                        "TAG",
-                        "extractBarcodeQrCodeURL:  \"TYPE_URL \\ntypeUrl:$typeUrl \\ntitle: $title \\nurl: $url"
-                    )
-                    lifecycleScope.launch {
-                        val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
-                        daoQr.insertQr(
-                            QrModel(
-                                titleTimeString = date,
-                                titleString = "Liên kết web",
-                                timeString = strDate,
-                                linkString = url
-                            )
-                        )
-                    }
+                        "TYPE_URL \ntitle: $title \nurl: $urlValue \n"
+
+
 //                    uri = Uri.parse(url)
                 }
                 Barcode.TYPE_EMAIL -> {
@@ -228,7 +206,7 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
                     val body = "${typeEmail?.body}"
                     val subject = "${typeEmail?.subject}"
                     mBinding.txtResult.text =
-                        "TYPE_EMAIL \nEmail: $address \nbody: $body \nsubject: $subject \n\n"
+                        "TYPE_EMAIL \nEmail: $address \nbody: $body \nsubject: $subject \n"
                 }
                 Barcode.TYPE_CONTACT_INFO -> {
                     val typeContact = barcode.contactInfo
@@ -251,13 +229,26 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
                                 "Email: $email \n" +
                                 "Note: $note"
                 }
-                Barcode.TYPE_SMS ->{
-                    val typeContact = barcode.contactInfo
-                    val phone = typeContact?.phones?.firstOrNull()?.number
-                    val mess = typeContact?.title
+                Barcode.TYPE_SMS -> {
+                    val typeContact = barcode.sms
+                    val phone = typeContact?.phoneNumber
+                    val mess = typeContact?.message
                     mBinding.txtResult.text =
-                        "TYPE_CONTACT_INFO \nphone: $phone \nmess: $mess"
+                        "TYPE_SMS \nphone: $phone \nmess: $mess"
                 }
+                Barcode.TYPE_PHONE -> {
+                    val typeContact = barcode.phone
+                    val phone = typeContact?.number
+                    mBinding.txtResult.text = "TYPE_PHONE \nPhone number: $phone"
+                }
+                Barcode.TYPE_GEO -> {
+                    val typeContact = barcode.geoPoint
+                    val latitude = typeContact?.lat
+                    val longitude = typeContact?.lng
+                    mBinding.txtResult.text =
+                        "TYPE_GEO \n Latitude: $latitude \n " + "Longitude: $longitude"
+                }
+
                 else -> {
                     mBinding.txtResult.text = "rawValue: $rawValue"
                     Log.d("TAG", "extractBarcodeQrCodeInfo: ${rawValue}")
@@ -276,6 +267,8 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
         mBinding.drawerLayout.addDrawerListener(toggle)
 //        mBinding.navView.getHeaderView(0)
         toggle.syncState()
+//        val menuItem = mBinding.navView.menu.findItem(NavigationViewModel.Tool.CREATED_QR.ordinal)
+//        menuItem.isChecked = true
 
     }
 
