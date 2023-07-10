@@ -4,25 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.text.TextUtils" />
-        <variable
-            name="viewModel"
-            type="com.example.example_qr_code.model.ClickViewModel" />
+        <import type="android.text.TextUtils"/>
         <variable
             name="item"
-            type="com.example.example_qr_code.QrModel" />
-        <variable
-            name="isSelected"
-            type="Boolean" />
+            type="com.example.example_qr_code.QrFavoriteModel" />
+
         <variable
             name="position"
             type="Integer" />
-        <variable
-            name="itemSelected"
-            type="Boolean" />
+
         <variable
             name="itemListener"
-            type="com.example.example_qr_code.adapter.HistoryAdapter.IListener" />
+            type="com.example.example_qr_code.adapter.FavoriteAdapter.IListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,29 +23,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimens_5">
 
-        <TextView
-            android:id="@+id/txt_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimens_10"
-            android:layout_marginTop="@dimen/dimens_10"
-            android:text="@{item.titleTimeString}"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="12 th 6, 2023" />
+
 
         <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimens_5"
             android:layout_marginTop="@dimen/dimens_5"
             android:layout_marginEnd="@dimen/dimens_5"
             app:cardCornerRadius="@dimen/dimens_10"
             app:cardElevation="@dimen/dimens_5"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_date">
+            app:layout_constraintStart_toStartOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -100,37 +82,23 @@
                     android:id="@+id/txt_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimens_20"
-                    android:text='@{TextUtils.isEmpty(item.linkString) ? (TextUtils.isEmpty(item.document) ? (TextUtils.isEmpty(item.fullName) ? (TextUtils.isEmpty(item.email) ? (TextUtils.isEmpty(item.phone) ? (TextUtils.isEmpty(item.networkName) ? item.latitude : item.networkName) : item.phone) : item.email) : item.fullName) : item.document) : item.linkString}'
                     android:textSize="@dimen/dimens_16"
                     app:layout_constraintStart_toEndOf="@+id/img_link"
                     app:layout_constraintTop_toBottomOf="@+id/txt_time"
-                    tools:text="@string/link" />
-
-                <TextView
-                    android:id="@+id/txt_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    tools:text="@string/link"
                     android:layout_marginStart="@dimen/dimens_20"
-                    android:text='@{TextUtils.isEmpty(item.linkString) ? (TextUtils.isEmpty(item.document) ? (TextUtils.isEmpty(item.fullName) ? (TextUtils.isEmpty(item.email) ? (TextUtils.isEmpty(item.phone) ? (TextUtils.isEmpty(item.networkName) ? item.latitude : item.networkName) : item.phone) : item.email) : item.fullName) : item.document) : item.linkString}'
-                    android:textSize="@dimen/dimens_16"
-                    app:layout_constraintStart_toEndOf="@+id/img_link"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_time"
-                    tools:text="@string/link" />
-
+                    android:text='@{TextUtils.isEmpty(item.linkString) ? (TextUtils.isEmpty(item.document) ? (TextUtils.isEmpty(item.fullName) ? (TextUtils.isEmpty(item.email) ? (TextUtils.isEmpty(item.phone) ? (TextUtils.isEmpty(item.networkName) ? item.latitude : item.networkName) : item.phone) : item.email) : item.fullName) : item.document) : item.linkString}' />
 
                 <ImageView
                     android:background="?selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="@dimen/dimens_18"
+                    android:src="@drawable/ic_star_fill"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/img_delete"
                     android:id="@+id/img_favorite"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dimens_18"
-                    android:src="@{isSelected ? @drawable/ic_star_fill : @drawable/ic_star}"
-                    android:onClick="@{()-> itemListener.onClickFavorite(item,position)}"
-                    tools:src="@drawable/ic_star"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/img_delete"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="wrap_content"/>
 
                 <ImageView
                     android:id="@+id/img_delete"

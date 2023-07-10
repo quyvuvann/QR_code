@@ -61,10 +61,10 @@ class CreatedDocumentFragment : BaseFragment<FragmentCreateDocumentBinding, Crea
                 val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
                 daoQr.insertQr(
                     QrModel(
-                        imageString = R.drawable.ic_sms,
+                        imageString = R.drawable.ic_document,
                         imageBitmap = bitmapTOString(bitmap),
                         titleTimeString = date,
-                        titleString = "SMS",
+                        titleString = "Document",
                         timeString = strDate,
                         linkString = "",
                         phone = "",

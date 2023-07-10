@@ -6,6 +6,7 @@
     <string name="result">Result</string>
     <string name="scan">Scan</string>
     <string name="History">History</string>
+    <string name="Favorite">Favorite</string>
     <string name="My_qr">My QR</string>
     <string name="Setting">Setting</string>
     <string name="Share">Share</string>
@@ -43,4 +44,5 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="query">Query</string>
+    <string name="empty">Empty</string>
 </resources>

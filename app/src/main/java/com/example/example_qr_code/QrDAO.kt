@@ -14,6 +14,7 @@ interface QrDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertQr(qr: QrModel)
 
-    @Query("DELETE FROM qr_table WHERE id = :qrString")
-    suspend fun deleteQr(qrString: Int)
+//    @Query("DELETE FROM qr_table WHERE id = :qrString")
+   @Query("DELETE FROM qr_table WHERE timeString LIKE '%' || :qrString || '%'")
+    suspend fun deleteQr(qrString: String)
 }

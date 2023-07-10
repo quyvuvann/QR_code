@@ -86,6 +86,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 //                        startActivity(Intent(this@MainActivity, MainActivity::class.java))
                         mBinding.drawerLayout.close()
                     }
+                    NavigationViewModel.Tool.FAVORITE -> {
+                        startActivity(Intent(this@MainActivity, FavoriteActivity::class.java))
+                    }
                     NavigationViewModel.Tool.HISTORY -> {
                         startActivity(Intent(this@MainActivity, HistoryActivity::class.java))
                     }

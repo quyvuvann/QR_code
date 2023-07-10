@@ -19,10 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.example.example_qr_code.CreateViewModel
-import com.example.example_qr_code.QrModel
-import com.example.example_qr_code.QrRoomDatabase
-import com.example.example_qr_code.R
+import com.example.example_qr_code.*
 import com.example.example_qr_code.adapter.NavigationAdapter
 import com.example.example_qr_code.base.BaseFragment
 import com.example.example_qr_code.base.NavigationViewModel
@@ -74,7 +71,7 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
             saveImage(createBitmap(mBinding.cardView, activityOwner), number.toString())
         }
         mBinding.btnShare.setOnClickListener {
-            shareImage()
+            shareImage(createBitmap(mBinding.cardView,activityOwner))
         }
         Handler(Looper.getMainLooper()).postDelayed({
             detectResultFromImage()
@@ -100,34 +97,19 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
 
     }
 
-    fun createBitmap(view: View, context: Context): Bitmap {
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
 
-        val file = File.createTempFile("temp", ".png", context.cacheDir)
-        val fos = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-        fos.close()
-        return bitmap
-    }
-
-    private fun shareImage() {
-        val file = File(Uri.parse(dataViewModel.uri.toString()).path!!)
+    private fun shareImage(bitmap: Bitmap) {
         val shareIntent = Intent(Intent.ACTION_SEND)
-        Log.d("TAG,", "shareImage: $file")
-        shareIntent.type = "image/*"
+        shareIntent.type = "image/jpeg"
+        val cachePath = File(activityOwner.externalCacheDir, "shared_image.jpg")
+        val outputStream = FileOutputStream(cachePath)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        outputStream.close()
         val imageUri =
-            file.let {
-                FileProvider.getUriForFile(
-                    activityOwner, activityOwner.packageName + ".provider",
-                    it
-                )
-            }
-        Log.d("TAG", "shareImage: $imageUri")
+            FileProvider.getUriForFile(activityOwner, "${activityOwner.packageName}.provider", cachePath)
         shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri)
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        startActivity(Intent.createChooser(shareIntent, "Share using"))
+        startActivity(Intent.createChooser(shareIntent, "Chia sẻ hình ảnh qua"))
     }
 
     private fun detectResultFromImage() {

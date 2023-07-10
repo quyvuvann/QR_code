@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.example_qr_code.data.dao.QrFavoriteDao
 
-@Database(entities = [QrModel::class], version = 1)
+@Database(entities = [QrModel::class, QrFavoriteModel::class], version = 1)
 abstract class QrRoomDatabase : RoomDatabase() {
     abstract fun qrDao(): QrDAO
+    abstract fun qrFavoriteDao(): QrFavoriteDao
 
     companion object {
         private var INSTANCE: QrRoomDatabase? = null

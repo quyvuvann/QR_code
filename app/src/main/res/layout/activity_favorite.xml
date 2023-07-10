@@ -31,7 +31,7 @@
                 app:xtb_colorTitle="@color/black"
                 app:xtb_iconLeft="@drawable/ic_menu_drawer"
                 app:xtb_iconRight="@drawable/ic_more"
-                app:xtb_title="@string/History" />
+                app:xtb_title="@string/Favorite" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_view"
@@ -42,7 +42,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/x_toolBar"
-                tools:listitem="@layout/layout_item_history" />
+                tools:listitem="@layout/layout_item_favorite" />
 
             <ImageView
                 android:id="@+id/img_empty"

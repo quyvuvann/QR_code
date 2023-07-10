@@ -67,10 +67,10 @@ class CreatedContactFragment : BaseFragment<FragmentCreateContactBinding, Create
                 val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
                 daoQr.insertQr(
                     QrModel(
-                        imageString = R.drawable.ic_sms,
+                        imageString = R.drawable.ic_person,
                         imageBitmap = bitmapTOString(bitmap),
                         titleTimeString = date,
-                        titleString = "SMS",
+                        titleString = "Contact",
                         timeString = strDate,
                         linkString = "",
                         phone = phoneNumber,

@@ -1,8 +1,13 @@
 package com.example.example_qr_code
 
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.util.Base64
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -11,7 +16,7 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
-import java.io.ByteArrayOutputStream
+import java.io.*
 import java.util.*
 
 
@@ -47,10 +52,33 @@ fun generateQRCode(data: String): Bitmap? {
     return null
 }
 
+fun createBitmap(view: View, context: Context): Bitmap {
+    val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    view.draw(canvas)
+
+    val file = File.createTempFile("temp", ".png", context.cacheDir)
+    val fos = FileOutputStream(file)
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+    fos.close()
+    return bitmap
+}
+
 fun bitmapTOString(bitmap: Bitmap): String {
     val stream = ByteArrayOutputStream()
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
     val byteArray: ByteArray = stream.toByteArray()
     val result: String = android.util.Base64.encodeToString(byteArray, android.util.Base64.DEFAULT)
     return result
+}
+
+fun stringToBitMap(image: String?): Bitmap? {
+    return try {
+        val encodeByte: ByteArray = Base64.decode(image, Base64.DEFAULT)
+        val inputStream: InputStream = ByteArrayInputStream(encodeByte)
+        BitmapFactory.decodeStream(inputStream)
+    } catch (e: Exception) {
+        e.message
+        null
+    }
 }

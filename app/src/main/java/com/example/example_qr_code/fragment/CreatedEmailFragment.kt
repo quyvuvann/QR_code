@@ -59,10 +59,10 @@ class CreatedEmailFragment : BaseFragment<FragmentCreateEmailBinding, CreateView
                 val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
                 daoQr.insertQr(
                     QrModel(
-                        imageString = R.drawable.ic_phone,
-                        imageBitmap = bitmapTOString(bitmap!!),
+                        imageString = R.drawable.ic_email,
+                        imageBitmap = bitmapTOString(bitmap),
                         titleTimeString = date,
-                        titleString = "Phone",
+                        titleString = "Email",
                         timeString = strDate,
                         linkString = "" ,
                         phone = "",

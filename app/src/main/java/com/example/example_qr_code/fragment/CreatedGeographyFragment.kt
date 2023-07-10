@@ -1,5 +1,6 @@
 package com.example.example_qr_code.fragment
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +28,7 @@ class CreatedGeographyFragment: BaseFragment<FragmentCreateGeographyBinding, Cre
             initQrCode()
         })
     }
+    @SuppressLint("SimpleDateFormat")
     private fun initQrCode() {
         val c = Calendar.getInstance()
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
@@ -49,10 +51,10 @@ class CreatedGeographyFragment: BaseFragment<FragmentCreateGeographyBinding, Cre
                 val daoQr = QrRoomDatabase.getDataBase(activityOwner).qrDao()
                 daoQr.insertQr(
                     QrModel(
-                        imageString = R.drawable.ic_sms,
+                        imageString = R.drawable.ic_location,
                         imageBitmap = bitmapTOString(bitmap),
                         titleTimeString = date,
-                        titleString = "SMS",
+                        titleString = "Geography",
                         timeString = strDate,
                         linkString = "",
                         phone = "",
@@ -84,11 +86,5 @@ class CreatedGeographyFragment: BaseFragment<FragmentCreateGeographyBinding, Cre
         return true
     }
 
-    private fun encodeVCardValue(value: String): String {
-        return value.replace("\n", "\\n")
-            .replace(";", "\\;")
-            .replace(":", "\\:")
-            .replace(",", "\\,")
-            .replace("\\", "\\\\")
-    }
+
 }
