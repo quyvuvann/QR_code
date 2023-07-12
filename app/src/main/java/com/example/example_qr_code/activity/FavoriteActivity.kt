@@ -76,7 +76,7 @@ class FavoriteActivity : BaseActivity<ActivityFavoriteBinding>() {
                         startActivity(Intent(this@FavoriteActivity, HistoryActivity::class.java))
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        showToast("My QR")
+                        startActivity(Intent(this@FavoriteActivity, MyQRActivity::class.java))
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
                         showToast("Create")

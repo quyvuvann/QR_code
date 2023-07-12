@@ -45,4 +45,6 @@
     <string name="longitude">Longitude</string>
     <string name="query">Query</string>
     <string name="empty">Empty</string>
+    <string name="txt_content_share">Share your contact information via QR</string>
+    <string name="txt_content_sharedata">Just enter the data you want to share. When done,click ✓.So next time you open My QR, your contact QR will be displayed</string>
 </resources>

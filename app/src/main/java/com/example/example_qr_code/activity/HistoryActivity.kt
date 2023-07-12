@@ -73,11 +73,14 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
                     NavigationViewModel.Tool.QR_CODE -> {
                         startActivity(Intent(this@HistoryActivity, MainActivity::class.java))
                     }
+                    NavigationViewModel.Tool.FAVORITE -> {
+                        startActivity(Intent(this@HistoryActivity, FavoriteActivity::class.java))
+                    }
                     NavigationViewModel.Tool.HISTORY -> {
 
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        showToast("My QR")
+                        startActivity(Intent(this@HistoryActivity, MyQRActivity::class.java))
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
                         showToast("Create")

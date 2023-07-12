@@ -8,8 +8,10 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.example_qr_code.CreateViewModel
 import com.example.example_qr_code.R
+import com.example.example_qr_code.activity.FavoriteActivity
 import com.example.example_qr_code.activity.HistoryActivity
 import com.example.example_qr_code.activity.MainActivity
+import com.example.example_qr_code.activity.MyQRActivity
 import com.example.example_qr_code.adapter.CreateAdapter
 import com.example.example_qr_code.adapter.NavigationAdapter
 import com.example.example_qr_code.base.BaseFragment
@@ -39,11 +41,14 @@ class SelectStyleFragment : BaseFragment<FragmentSelectStyleBinding, NavigationV
                     NavigationViewModel.Tool.QR_CODE -> {
                         startActivity(Intent(activityOwner, MainActivity::class.java))
                     }
+                    NavigationViewModel.Tool.FAVORITE -> {
+                        startActivity(Intent(activityOwner, FavoriteActivity::class.java))
+                    }
                     NavigationViewModel.Tool.HISTORY -> {
                         startActivity(Intent(activityOwner, HistoryActivity::class.java))
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-
+                        startActivity(Intent(activityOwner, MyQRActivity::class.java))
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
 

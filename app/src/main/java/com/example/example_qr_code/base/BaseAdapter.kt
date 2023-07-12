@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.example_qr_code.BR
@@ -57,21 +58,21 @@ abstract class BaseAdapter<T : Any>(
 
     }
 
-override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-    holder.binding.apply {
-        setVariable(BR.item, data[position])
-        setVariable(BR.position, position)
-        setVariable(BR.itemListener, listener)
-        setVariable(BR.itemSelected,hiddenList)
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        holder.binding.apply {
+            setVariable(BR.item, data[position])
+            setVariable(BR.position, position)
+            setVariable(BR.itemListener, listener)
+//        setVariable(BR.itemSelected,hiddenList)
 //        if (singleSelect) {
 //            setVariable(BR.itemSelected, selectedItemPosition == position)
-//            val context = root.context as LifecycleOwner
-//            lifecycleOwner = context
-//            executePendingBindings()
+            val context = root.context as LifecycleOwner
+            lifecycleOwner = context
+            executePendingBindings()
 //        }
 
+        }
     }
-}
 
 
     override fun getItemCount() = data.size

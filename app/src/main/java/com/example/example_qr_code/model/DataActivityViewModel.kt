@@ -2,11 +2,12 @@ package com.example.example_qr_code.model
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import com.example.example_qr_code.base.BaseViewModel
 import java.net.URI
 
-class DataViewModel : BaseViewModel(){
-    var bitmap:Bitmap ?= null
+class DataActivityViewModel : BaseViewModel(){
+    var bitmapQr:Bitmap ?= null
     var uri : Uri ?= null
     var uriShow :Uri ?= null
     var image: Int? = null
@@ -14,8 +15,10 @@ class DataViewModel : BaseViewModel(){
     
 
     fun setImageBitmap(bitmap: Bitmap){
-        this.bitmap =bitmap
+        this.bitmapQr =bitmap
+        Log.d("TAG", "setImageBitmap: $bitmap")
     }
+    fun getBitmap() = bitmapQr
     fun setUriReceiver(uri: Uri){
         this.uri = uri
     }

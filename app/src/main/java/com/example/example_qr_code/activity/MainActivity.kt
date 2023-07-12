@@ -93,7 +93,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                         startActivity(Intent(this@MainActivity, HistoryActivity::class.java))
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        showToast("My QR")
+                        startActivity(Intent(this@MainActivity, MyQRActivity::class.java))
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
                         startActivity(Intent(this@MainActivity, Create2Activity::class.java))

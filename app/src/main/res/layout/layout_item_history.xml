@@ -125,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dimens_18"
-                    android:src="@{isSelected ? @drawable/ic_star_fill : @drawable/ic_star}"
+                    android:src="@{itemSelected ? @drawable/ic_star_fill : @drawable/ic_star}"
                     android:onClick="@{()-> itemListener.onClickFavorite(item,position)}"
                     tools:src="@drawable/ic_star"
                     app:layout_constraintBottom_toBottomOf="parent"
