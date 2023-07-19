@@ -15,16 +15,16 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
 
             <com.example.example_qr_code.base.XToolbar
-                android:paddingTop="@dimen/dimens_30"
-                android:background="@color/color_blue"
                 android:id="@+id/x_toolBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/color_blue"
+                android:paddingTop="@dimen/dimens_30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -57,6 +57,16 @@
                 tools:text="@string/My_qr" />
 
             <ImageView
+                android:id="@+id/btn_rename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimens_16"
+                android:src="@drawable/ic_edit_name"
+                app:layout_constraintBottom_toBottomOf="@+id/img_view"
+                app:layout_constraintEnd_toStartOf="@+id/btn_favorite"
+                app:layout_constraintTop_toTopOf="@+id/img_view" />
+
+            <ImageView
                 android:id="@+id/btn_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,7 +90,6 @@
                     android:id="@+id/img_qrcode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
                     android:scaleType="fitXY"
                     tools:src="@drawable/ic_qrcode" />
             </androidx.cardview.widget.CardView>
@@ -128,6 +137,27 @@
                 app:layout_constraintStart_toStartOf="@+id/btn_share"
                 app:layout_constraintTop_toBottomOf="@+id/btn_share" />
 
+            <ImageView
+                android:id="@+id/btn_newCode"
+                android:layout_width="@dimen/dimens_40"
+                android:layout_height="@dimen/dimens_40"
+                android:layout_marginStart="@dimen/dimens_40"
+                android:layout_marginTop="@dimen/dimens_10"
+                android:background="?selectableItemBackground"
+                android:src="@drawable/ic_new_qr"
+                app:layout_constraintStart_toEndOf="@+id/btn_share"
+                app:layout_constraintTop_toBottomOf="@+id/card_view" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/newQR"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dimens_16"
+                app:layout_constraintEnd_toEndOf="@+id/btn_newCode"
+                app:layout_constraintStart_toStartOf="@+id/btn_newCode"
+                app:layout_constraintTop_toBottomOf="@+id/btn_newCode" />
+
             <TextView
                 android:id="@+id/txt_result"
                 android:layout_width="match_parent"
@@ -142,15 +172,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_save"
                 tools:text="@string/share" />
+
+            <ProgressBar
+                android:id="@+id/process"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/color_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_save" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.navigation.NavigationView
 
             android:id="@+id/nav_view"
-            app:itemTextColor="@color/color_blue"
             android:layout_width="@dimen/dimens_260"
             android:layout_height="match_parent"
-            android:layout_gravity="start">
+            android:layout_gravity="start"
+            app:itemTextColor="@color/color_blue">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

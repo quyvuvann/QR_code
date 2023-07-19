@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -13,9 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.example.example_qr_code.QrModel
-import com.example.example_qr_code.QrRoomDatabase
-import com.example.example_qr_code.R
+import com.example.example_qr_code.*
 import com.example.example_qr_code.adapter.NavigationAdapter
 import com.example.example_qr_code.base.BaseActivity
 import com.example.example_qr_code.base.NavigationViewModel
@@ -26,6 +26,10 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.google.zxing.client.android.Intents
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanIntentResult
+import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -38,11 +42,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var barCodeScanner: BarcodeScanner? = null
     private var navigationAdapter: NavigationAdapter? = null
     private var uri: Uri? = null
+    private var uriQr: Uri? = null
+    private val random = Random()
+    val number = random.nextInt(1000000) + 1
+
 
     override fun getLayoutId() = R.layout.activity_main
 
     override fun setUpView() {
         PermissionUtils.requestPermission()
+        if (PermissionUtils.checkCameraPermission(this)) {
+            scanCode()
+        } else {
+            PermissionUtils.requestCameraPermission(this)
+        }
         Glide.with(this).load(R.drawable.ic_qrcode).into(findViewById(R.id.img_viewQR))
         Glide.with(this).load(R.drawable.ic_qrcode).into(findViewById(R.id.img_nav))
         setUpNavigation()
@@ -51,13 +64,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS).build()
 
         barCodeScanner = BarcodeScanning.getClient(barCodeScannerOptions!!)
-
+        val imageUr = intent.getParcelableExtra<Uri>("uriKey")
+        if (imageUr != null){
+            imageUri = imageUr
+        }
     }
 
     override fun listener() {
         mBinding.btnCamera.setOnClickListener {
             if (PermissionUtils.checkCameraPermission(this)) {
-                pickImageCamera()
+                scanCode()
             } else {
                 PermissionUtils.requestCameraPermission(this)
             }
@@ -72,6 +88,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         mBinding.btnScan.setOnClickListener {
             if (imageUri == null) {
                 showToast("Pick image first")
+
             } else {
                 detectResultFromImage()
             }
@@ -82,7 +99,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         navigationAdapter?.listener = object : NavigationAdapter.IListener {
             override fun onClickNav(item: NavigationViewModel.NavigationItem) {
                 when (item.toolId) {
-                    NavigationViewModel.Tool.QR_CODE ->{
+                    NavigationViewModel.Tool.QR_CODE -> {
 //                        startActivity(Intent(this@MainActivity, MainActivity::class.java))
                         mBinding.drawerLayout.close()
                     }
@@ -93,7 +110,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                         startActivity(Intent(this@MainActivity, HistoryActivity::class.java))
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        startActivity(Intent(this@MainActivity, MyQRActivity::class.java))
+                        lifecycleScope.launch {
+                            val myDao = QrRoomDatabase.getDataBase(this@MainActivity).qrMyDao()
+                            if (myDao.getAllMyQr().size > 0) {
+                                startActivity(
+                                    Intent(this@MainActivity, ShowQRActivity::class.java)
+                                )
+                            } else {
+                                startActivity(Intent(this@MainActivity, MyQRActivity::class.java))
+                            }
+                        }
+
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
                         startActivity(Intent(this@MainActivity, Create2Activity::class.java))
@@ -123,7 +150,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         navigationAdapter = NavigationAdapter()
         mBinding.rcvNav.adapter = navigationAdapter
         navigationAdapter!!.submitList(listNav.toMutableList())
-
         val toggle = ActionBarDrawerToggle(this, mBinding.drawerLayout, 0, 0)
         mBinding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -240,7 +266,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
 
-    private fun selectImageGallery() {
+     fun selectImageGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         galleryActivityResultLauncher.launch(intent)
@@ -311,6 +337,58 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
+    fun scanCode() {
+        val options = ScanOptions().setOrientationLocked(false).setCaptureActivity(
+            CustomScannerActivity::class.java
+        )
+        barcodeLauncher.launch(options)
+    }
+
+    val barLauncher = registerForActivityResult(ScanContract()) { it ->
+        if (it.contents != null) {
+            Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private val barcodeLauncher = registerForActivityResult(
+        ScanContract()
+    ) { result: ScanIntentResult ->
+        if (result.contents == null) {
+            val originalIntent = result.originalIntent
+            if (originalIntent == null) {
+                Log.d("MainActivity", "Cancelled scan")
+                Toast.makeText(this@MainActivity, "Cancelled", Toast.LENGTH_LONG).show()
+            } else if (originalIntent.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)) {
+                Log.d(
+                    "MainActivity",
+                    "Cancelled scan due to missing camera permission"
+                )
+                Toast.makeText(
+                    this@MainActivity,
+                    "Cancelled due to missing camera permission",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } else {
+            Log.d("MainActivity", "Scanned")
+            Toast.makeText(
+                this@MainActivity,
+                "Scanned: " + result.contents,
+                Toast.LENGTH_LONG
+            ).show()
+            Log.d(
+                "TAG",
+                ": barcodeImagePath :${result.barcodeImagePath},orientation :${result.orientation},originalIntent:${result.originalIntent},contents: ${result.contents},formatName: ${result.formatName},rawBytes:${result.rawBytes}"
+            )
+            val barcodeImage =
+                BitmapFactory.decodeByteArray(result.rawBytes, 0, result.rawBytes.size)
+            Log.d("TAG", "barcodeImage: $barcodeImage")
+            mBinding.txtResult.text = result.contents
+            imageUri = getImageUri(this, generateQRCode(result.contents)!!, number.toString())
+            Glide.with(this).load(generateQRCode(result.contents)).into(mBinding.imgViewQR)
+        }
+    }
+
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -320,8 +398,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         private const val CAMERA_REQUEST_CODE = 100
         private const val STORAGE_REQUEST_CODE = 101
     }
-
-
 
 
 }

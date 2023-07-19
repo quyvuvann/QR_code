@@ -114,6 +114,19 @@ class XToolbar :FrameLayout{
             btnRight.setOnClickListener {
                 clickRight(it)
             }
+
+        }
+    }
+    fun setToolbarClickListener2(clickFlash: (View) -> Unit, clickRotate: (View) -> Unit) {
+        _binding.apply {
+            btnFlash.setOnClickListener {
+                clickFlash(it)
+            }
+
+            btnRotateCamera.setOnClickListener {
+                clickRotate(it)
+            }
+
         }
     }
 
@@ -156,5 +169,14 @@ class XToolbar :FrameLayout{
     }
     fun setGoneFilter(visible: Int){
         _binding.btnFilter.visibility = visible
+    }
+    fun setGoneFlash(visible: Int){
+        _binding.btnFlash.visibility = visible
+    }
+    fun setGoneRotateCamera(visible: Int){
+        _binding.btnRotateCamera.visibility = visible
+    }
+    fun setImageFlash(image:Int){
+        _binding.btnFlash.setImageResource(image)
     }
 }

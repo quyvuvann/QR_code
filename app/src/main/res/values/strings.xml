@@ -36,6 +36,7 @@
     <string name="hint">Hint</string>
     <string name="save">Save</string>
     <string name="share">Share</string>
+    <string name="newQR">Create new</string>
     <string name="Wep">WEP</string>
     <string name="wpa">WPA</string>
     <string name="open">OPEN</string>
@@ -45,6 +46,19 @@
     <string name="longitude">Longitude</string>
     <string name="query">Query</string>
     <string name="empty">Empty</string>
+    <string name="rename">Rename</string>
     <string name="txt_content_share">Share your contact information via QR</string>
+
     <string name="txt_content_sharedata">Just enter the data you want to share. When done,click ✓.So next time you open My QR, your contact QR will be displayed</string>
+    <string name="txt_cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="title_activity_custom_scan_barcodes">CustomScanBarcodes</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

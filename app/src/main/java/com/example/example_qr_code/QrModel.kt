@@ -11,7 +11,7 @@ class QrModel (
     @ColumnInfo(name = "imageString") val imageString:Int,
     @ColumnInfo(name = "imageBitmap") val imageBitmap:String,
     @ColumnInfo(name = "titleTimeString") val titleTimeString: String,
-    @ColumnInfo(name = "titleString") val titleString:String,
+    @ColumnInfo(name = "titleString") var titleString:String,
     @ColumnInfo(name = "timeString") val timeString:String,
     @ColumnInfo(name = "linkString") val linkString:String,
     @ColumnInfo(name = "phone") val phone:String,

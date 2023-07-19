@@ -14,4 +14,11 @@
         <item name="android:statusBarColor">@color/white</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="Theme.Example_QR_code.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Example_QR_code.AppBarOverlay"
+        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Example_QR_code.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

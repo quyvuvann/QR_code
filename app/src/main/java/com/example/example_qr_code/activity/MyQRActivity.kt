@@ -26,18 +26,18 @@ import com.example.example_qr_code.base.BaseActivity
 import com.example.example_qr_code.base.NavigationViewModel
 import com.example.example_qr_code.databinding.ActivityMyQrBinding
 import com.example.example_qr_code.fragment.SelectStyleFragment
-import com.example.example_qr_code.fragment.ShowQrCodeFragment
 import com.example.example_qr_code.model.DataActivityViewModel
-import com.example.example_qr_code.model.DataViewModel
+import com.example.example_qr_code.model.MyQrModel
+
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.log
 
 class MyQRActivity : BaseActivity<ActivityMyQrBinding>() {
     private var navigationAdapter = NavigationAdapter()
+
     override fun getLayoutId(): Int = R.layout.activity_my_qr
-
-
     override fun setUpView() {
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -48,6 +48,7 @@ class MyQRActivity : BaseActivity<ActivityMyQrBinding>() {
         mBinding.edtPhoneNumber.requestLayout()
         mBinding.edtEmail.requestLayout()
         mBinding.edtNote.requestLayout()
+
     }
 
     override fun listener() {
@@ -139,8 +140,6 @@ class MyQRActivity : BaseActivity<ActivityMyQrBinding>() {
                 "TITLE;CHARSET=UTF-8:${encodeVCardValue(note)}\n" +
                 "END:VCARD"
         val bitmap = generateQRCode(data)
-//        dataViewModel.setImageBitmap(bitmap!!)
-//        dataViewModel.setDataQrcode(R.drawable.ic_person, R.string.contact)
 
         if (fullName.isEmpty() || workplace.isEmpty() || address.isEmpty()
             || phoneNumber.isEmpty() || email.isEmpty() || note.isEmpty()
@@ -149,7 +148,7 @@ class MyQRActivity : BaseActivity<ActivityMyQrBinding>() {
         } else {
             lifecycleScope.launch {
                 val daoQr = QrRoomDatabase.getDataBase(this@MyQRActivity).qrDao()
-                daoQr.insertQr(
+                val id  = daoQr.insertQr(
                     QrModel(
                         imageString = R.drawable.ic_person,
                         imageBitmap = bitmapTOString(bitmap!!),
@@ -175,12 +174,25 @@ class MyQRActivity : BaseActivity<ActivityMyQrBinding>() {
                         query = ""
                     )
                 )
+                val myDao = QrRoomDatabase.getDataBase(this@MyQRActivity).qrMyDao()
+//                myDao.insertMyQr(MyQrModel(isCheck = true, imageBitmap = bitmapTOString(bitmap!!)))
+                myDao.insertMyQr(MyQrModel(imageBitmap = bitmapTOString(bitmap), titleString = "My QR", idItem = id.toInt()))
+                val intent = Intent(this@MyQRActivity, ShowQRActivity::class.java)
+                intent.putExtra("bitmapKey", bitmap)
+                Log.d("TAG", "initQrCode: $id")
+                intent.putExtra("idKey", id.toInt())
+                startActivity(intent)
             }
-            Log.d("TAG", "initQrCode: ${bitmap}")
+            lifecycleScope.launch {
 
-            dataActivityViewModel.setImageBitmap(bitmap!!.copy(Bitmap.Config.ARGB_8888, true))
+//                val intent = Intent(this@MyQRActivity, ShowQRActivity::class.java)
+//                intent.putExtra("bitmapKey", bitmap)
+//                Log.d("TAG", "initQrCode: $id")
+//                intent.putExtra("idKey", id.toInt())
+//                startActivity(intent)
+            }
 
-            startActivity(Intent(this@MyQRActivity,ShowQRActivity::class.java))
+
         }
 
     }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_Layout"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:fitsSystemWindows="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".activity.CustomScannerActivity">
+
+
+            <com.journeyapps.barcodescanner.DecoratedBarcodeView
+                android:id="@+id/barcode_scanner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:zxing_scanner_layout="@layout/custom_barcode_scanner"
+                tools:ignore="ResourceCycle">
+                <com.example.example_qr_code.base.XToolbar
+                    android:id="@+id/x_toolBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:xtb_iconLeft="@drawable/ic_menu_white"
+                    app:xtb_iconRight="@drawable/ic_image_white"
+                    app:xtb_visibilityLeft="visible" />
+            </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.navigation.NavigationView
+
+            android:layout_width="@dimen/dimens_260"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_marginTop="@dimen/dimens_30"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/img_nav"
+                    android:layout_width="@dimen/dimens_150"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_nav"
+                    android:layout_marginTop="@dimen/dimens_20"
+                    android:id="@+id/rcv_nav"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.navigation.NavigationView>
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</layout>

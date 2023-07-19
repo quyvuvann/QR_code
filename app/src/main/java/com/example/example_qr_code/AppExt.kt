@@ -6,10 +6,16 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Base64
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -19,6 +25,25 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import java.io.*
 import java.util.*
 
+fun <T> Fragment.observer(liveData: LiveData<T>, onChange: (T) -> Unit) {
+    liveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer(onChange))
+}
+
+
+fun <T> LiveData<T>.observeOnce(
+    lifecycleOwner: LifecycleOwner,
+    observer: androidx.lifecycle.Observer<T>
+) {
+    observe(lifecycleOwner, object : androidx.lifecycle.Observer<T> {
+        override fun onChanged(value: T) {
+            observer.onChanged(value)
+            removeObserver(this)
+        }
+
+    })
+}
+
+fun <T> MutableLiveData<T>.asLiveData() = this as LiveData<T>
 
 @BindingAdapter("app:loadImg")
 fun ImageView.loadImg(str: Any) = Glide.with(context).load(str).into(this)
@@ -81,4 +106,12 @@ fun stringToBitMap(image: String?): Bitmap? {
         e.message
         null
     }
+}
+
+fun getImageUri(inContext: Context, inImage: Bitmap, title: String): Uri? {
+    val bytes = ByteArrayOutputStream()
+    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+    val path =
+        MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, title, null)
+    return Uri.parse(path)
 }

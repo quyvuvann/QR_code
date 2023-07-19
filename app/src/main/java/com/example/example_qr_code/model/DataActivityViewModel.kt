@@ -3,6 +3,8 @@ package com.example.example_qr_code.model
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.example_qr_code.base.BaseViewModel
 import java.net.URI
 
@@ -12,7 +14,12 @@ class DataActivityViewModel : BaseViewModel(){
     var uriShow :Uri ?= null
     var image: Int? = null
     var titleCr: Int? = null
-    
+    private val _bitmapQRCode = MutableLiveData<Bitmap>()
+    val bitmapQrCode: LiveData<Bitmap> = _bitmapQRCode
+
+    fun initQrcode(bitmap: Bitmap){
+        _bitmapQRCode.value = bitmap
+    }
 
     fun setImageBitmap(bitmap: Bitmap){
         this.bitmapQr =bitmap
