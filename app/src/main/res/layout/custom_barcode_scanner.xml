@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/zxing_barcode_surface"
-        app:zxing_framing_rect_width="250dp"
+        app:zxing_framing_rect_width="@dimen/dimens_250"
         app:zxing_framing_rect_height="@dimen/dimens_250"/>
 
     <com.journeyapps.barcodescanner.ViewfinderView
@@ -28,5 +28,6 @@
         android:background="@color/zxing_transparent"
         android:text="@string/zxing_msg_default_status"
         android:textColor="@color/zxing_status_text"/>
+
 
 </merge>

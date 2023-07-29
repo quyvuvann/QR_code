@@ -30,6 +30,7 @@ public final class OpenCameraInterface {
      * For {@link #open(int)}, means no preference for which camera to open.
      */
     public static final int NO_REQUESTED_CAMERA = -1;
+    public static final int CAMERA_FACING_BACK = 0;
 
     public static int getCameraId(int requestedId) {
         int numCameras = Camera.getNumberOfCameras();

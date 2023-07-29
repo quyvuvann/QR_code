@@ -3,10 +3,22 @@ package com.journeyapps.barcodescanner;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CaptureRequest;
+import android.os.Build;
+import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.Rational;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
@@ -16,6 +28,9 @@ import com.google.zxing.client.android.DecodeFormatManager;
 import com.google.zxing.client.android.DecodeHintManager;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.client.android.R;
+import com.google.zxing.client.android.camera.open.OpenCameraInterface;
+import com.journeyapps.barcodescanner.camera.CameraInstance;
+import com.journeyapps.barcodescanner.camera.CameraManager;
 import com.journeyapps.barcodescanner.camera.CameraParametersCallback;
 import com.journeyapps.barcodescanner.camera.CameraSettings;
 
@@ -25,13 +40,22 @@ import java.util.Set;
 
 /**
  * Encapsulates BarcodeView, ViewfinderView and status text.
- *
+ * <p>
  * To customize the UI, use BarcodeView and ViewfinderView directly.
  */
 public class DecoratedBarcodeView extends FrameLayout {
     private BarcodeView barcodeView;
     private ViewfinderView viewFinder;
     private TextView statusView;
+    private Camera camera;
+    private CameraManager cameraManager;
+    private CameraInstance cameraInstance;
+    private String cameraId;
+    private CameraCharacteristics characteristics;
+    private CameraSettings settings = new CameraSettings();
+
+
+
 
     /**
      * The instance of @link TorchListener to send events callback.
@@ -94,8 +118,8 @@ public class DecoratedBarcodeView extends FrameLayout {
 
         if (barcodeView == null) {
             throw new IllegalArgumentException(
-                "There is no a com.journeyapps.barcodescanner.BarcodeView on provided layout " +
-                "with the id \"zxing_barcode_surface\".");
+                    "There is no a com.journeyapps.barcodescanner.BarcodeView on provided layout " +
+                            "with the id \"zxing_barcode_surface\".");
         }
 
         // Pass on any preview-related attributes
@@ -106,14 +130,15 @@ public class DecoratedBarcodeView extends FrameLayout {
 
         if (viewFinder == null) {
             throw new IllegalArgumentException(
-                "There is no a com.journeyapps.barcodescanner.ViewfinderView on provided layout " +
-                "with the id \"zxing_viewfinder_view\".");
+                    "There is no a com.journeyapps.barcodescanner.ViewfinderView on provided layout " +
+                            "with the id \"zxing_viewfinder_view\".");
         }
 
         viewFinder.setCameraPreview(barcodeView);
 
         // statusView is optional
         statusView = findViewById(R.id.zxing_status_view);
+        camera = OpenCameraInterface.open(settings.getRequestedCameraId());
     }
 
     /**
@@ -268,7 +293,7 @@ public class DecoratedBarcodeView extends FrameLayout {
 
     /**
      * Handles focus, camera, volume up and volume down keys.
-     *
+     * <p>
      * Note that this view is not usually focused, so the Activity should call this directly.
      */
     @Override
@@ -302,4 +327,36 @@ public class DecoratedBarcodeView extends FrameLayout {
 
         void onTorchOff();
     }
+
+
+    public void switchCamera() {
+        CameraSettings currentCameraSettings = barcodeView.getCameraSettings();
+        int currentCameraId = currentCameraSettings.getRequestedCameraId();
+
+        int newCameraId = (currentCameraId == CameraSettings.CAMERA_FACING_BACK)
+                ? CameraSettings.CAMERA_FACING_FRONT
+                : CameraSettings.CAMERA_FACING_BACK;
+
+        CameraSettings newCameraSettings = new CameraSettings();
+        newCameraSettings.setRequestedCameraId(newCameraId);
+
+        barcodeView.pause();
+        barcodeView.setCameraSettings(newCameraSettings);
+        barcodeView.resume();
+    }
+
+    public void zoomCamera(Integer value){
+        cameraManager  = new CameraManager(getContext().getApplicationContext());
+        cameraManager.zoomCamera(value);
+    }
+    public void zoomin(){
+        cameraManager  = new CameraManager(getContext().getApplicationContext());
+        cameraManager.zoomIn();
+    }
+    public void zoomOut(){
+        cameraManager  = new CameraManager(getContext().getApplicationContext());
+        cameraManager.zoomOut();
+    }
+
+
 }

@@ -1,12 +1,20 @@
 package com.journeyapps.barcodescanner.camera;
 
+import android.content.Context;
+import android.hardware.Camera;
+import android.os.Build;
+
 import com.google.zxing.client.android.camera.open.OpenCameraInterface;
 
 /**
  *
  */
 public class CameraSettings {
-    private int requestedCameraId = OpenCameraInterface.NO_REQUESTED_CAMERA;
+
+    public static final int CAMERA_FACING_BACK = 0;
+    public static final int CAMERA_FACING_FRONT = 1;
+
+    private int requestedCameraId = OpenCameraInterface.CAMERA_FACING_BACK;
     private boolean scanInverted = false;
     private boolean barcodeSceneModeEnabled = false;
     private boolean meteringEnabled = false;
@@ -160,4 +168,5 @@ public class CameraSettings {
     public void setAutoTorchEnabled(boolean autoTorchEnabled) {
         this.autoTorchEnabled = autoTorchEnabled;
     }
+
 }

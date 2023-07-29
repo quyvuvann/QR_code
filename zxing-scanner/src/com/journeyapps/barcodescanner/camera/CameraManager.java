@@ -519,4 +519,60 @@ public final class CameraManager {
     public Camera getCamera() {
         return camera;
     }
+    public void zoomCamera(int zoomLevel) {
+        Camera theCamera = camera;
+        if (theCamera != null) {
+            Camera.Parameters parameters = theCamera.getParameters();
+            if (parameters.isZoomSupported()) {
+                int maxZoom = parameters.getMaxZoom();
+                if (zoomLevel >= 0 && zoomLevel <= maxZoom) {
+                    parameters.setZoom(zoomLevel);
+                    theCamera.setParameters(parameters);
+                } else {
+                    Log.w(TAG, "Mức zoom không hợp lệ. Giá trị nên nằm trong khoảng từ 0 đến " + maxZoom);
+                }
+            } else {
+                Log.w(TAG, "Mức zoom không được hỗ trợ trên thiết bị này.");
+            }
+        }
+    }
+
+    // Thêm hàm zoomIn để phóng to máy ảnh.
+    public void zoomIn() {
+
+        Camera camera2 = camera;
+        if (camera2 != null){
+            int currentZoom = getCurrentZoom();
+            int maxZoom = camera2.getParameters().getMaxZoom();
+            if (currentZoom < maxZoom) {
+                zoomCamera(currentZoom + 1);
+            }
+        }
+
+    }
+
+    // Thêm hàm zoomOut để thu nhỏ máy ảnh.
+    public void zoomOut() {
+        Camera camera2 = camera;
+        Log.d(TAG, "zoomOut: "+camera2);
+        if (camera2!= null){
+            int currentZoom = getCurrentZoom();
+            if (currentZoom > 0) {
+                zoomCamera(currentZoom - 1);
+            }
+        }
+
+    }
+    private int getCurrentZoom() {
+        Camera theCamera = camera;
+        if (theCamera != null) {
+            Camera.Parameters parameters = theCamera.getParameters();
+            if (parameters.isZoomSupported()) {
+                return parameters.getZoom();
+            } else {
+                Log.w(TAG, "Mức zoom không được hỗ trợ trên thiết bị này.");
+            }
+        }
+        return 0;
+    }
 }

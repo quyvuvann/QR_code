@@ -57,7 +57,7 @@ import java.util.List;
  * 6. set surface size according to preview size
  * 7. set surface and start preview
  */
-public class CameraPreview extends ViewGroup {
+public class  CameraPreview extends ViewGroup {
     public interface StateListener {
         /**
          * Preview and frame sizes are determined.

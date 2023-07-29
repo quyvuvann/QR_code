@@ -2,17 +2,12 @@ package com.example.example_qr_code.activity
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Environment
-import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.view.Window
@@ -29,6 +24,7 @@ import com.example.example_qr_code.adapter.NavigationAdapter
 import com.example.example_qr_code.base.BaseActivity
 import com.example.example_qr_code.base.NavigationViewModel
 import com.example.example_qr_code.databinding.ActivityHistoryBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
 import java.util.*
@@ -80,10 +76,25 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        startActivity(Intent(this@HistoryActivity, MyQRActivity::class.java))
+                        lifecycleScope.launch() {
+                            val myDao = QrRoomDatabase.getDataBase(this@HistoryActivity).qrMyDao()
+                            if (myDao.getAllMyQr().size > 0) {
+                                startActivity(
+                                    Intent(this@HistoryActivity, ShowQRActivity::class.java)
+                                )
+                                finish()
+                            } else {
+                                startActivity(
+                                    Intent(
+                                        this@HistoryActivity, MyQRActivity::class.java
+                                    )
+                                )
+                                finish()
+                            }
+                        }
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
-                        showToast("Create")
+                        startActivity(Intent(this@HistoryActivity, Create2Activity::class.java))
                     }
                     NavigationViewModel.Tool.SETTING -> {
                         showToast("Setting")
@@ -111,6 +122,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
     }
 
     override fun listener() {
+        clickFavorite()
         mBinding.xToolBar.setToolbarClickListener(clickRight = {
 
         }, clickLeft = {
@@ -120,11 +132,6 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
         historyAdapter.listener = object : HistoryAdapter.IListener {
             override fun onClick(item: QrModel) {
                 Log.d("TAG", "onClick: {${item.id}")
-//                val intent = Intent()
-//                intent.action = Intent.ACTION_VIEW
-//                intent.data = Uri.parse(item.linkString)
-//                startActivity(intent)
-
                 Log.d("TAG", "onClickQR: ${item.id}")
                 Log.d("TAG", "onClickQR: ${item.titleString}")
                 Log.d("TAG", "onClickQR: ${item.linkString}")
@@ -174,38 +181,58 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 
             override fun onClickFavorite(item: QrModel, position: Int) {
                 historyAdapter.setSelectedItem(position)
-                lifecycleScope.launch {
-                    val qrFavoriteDao =
-                        QrRoomDatabase.getDataBase(this@HistoryActivity).qrFavoriteDao()
-                    qrFavoriteDao.insertFavoriteQr(
-                        QrFavoriteModel(
-                            imageString = item.imageString,
-                            imageBitmap = item.imageBitmap,
-                            titleTimeString = item.titleTimeString,
-                            titleString = item.titleString,
-                            timeString = item.timeString,
-                            linkString = item.linkString,
-                            phone = item.phone,
-                            message = item.message,
-                            email = item.email,
-                            topic = item.topic,
-                            content = item.content,
-                            document = item.document,
-                            fullName = item.fullName,
-                            workPlace = item.workPlace,
-                            address = item.address,
-                            note = item.note,
-                            networkName = item.networkName,
-                            password = item.password,
-                            typeWifi = item.typeWifi,
-                            latitude = item.latitude,
-                            longitude = item.longitude,
-                            query = item.query
+                Log.d("TAG", "onClickFavorite: ${historyAdapter.isFavorite}")
+                if (historyAdapter.isFavorite) {
+                    lifecycleScope.launch {
+                        val qrFavoriteDao =
+                            QrRoomDatabase.getDataBase(this@HistoryActivity).qrFavoriteDao()
+                        qrFavoriteDao.insertFavoriteQr(
+                            QrFavoriteModel(
+                                id = item.id,
+                                imageString = item.imageString,
+                                imageBitmap = item.imageBitmap,
+                                titleTimeString = item.titleTimeString,
+                                titleString = item.titleString,
+                                timeString = item.timeString,
+                                linkString = item.linkString,
+                                phone = item.phone,
+                                message = item.message,
+                                email = item.email,
+                                topic = item.topic,
+                                content = item.content,
+                                document = item.document,
+                                fullName = item.fullName,
+                                workPlace = item.workPlace,
+                                address = item.address,
+                                note = item.note,
+                                networkName = item.networkName,
+                                password = item.password,
+                                typeWifi = item.typeWifi,
+                                latitude = item.latitude,
+                                longitude = item.longitude,
+                                query = item.query
+                            )
                         )
-                    )
+                    }
+                } else {
+                    lifecycleScope.launch {
+                        val qrDao = QrRoomDatabase.getDataBase(this@HistoryActivity).qrDao()
+                        qrDao.deleteQr(item.timeString)
+                        Log.d("TAG", "onClickDelete: $position")
+                        historyAdapter.submitList(qrDao.getAllQr())
+                        if (qrDao.getAllQr().sortedByDescending { it.timeString }.isEmpty()) {
 
+                            mBinding.txtEmpty.visibility = View.VISIBLE
+                            mBinding.imgEmpty.visibility = View.VISIBLE
+                        } else {
+                            mBinding.imgEmpty.visibility = View.GONE
+                            mBinding.txtEmpty.visibility = View.GONE
+                        }
+                    }
                 }
+
             }
+
 
         }
     }
@@ -267,5 +294,70 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
         startActivity(Intent.createChooser(shareIntent, "Chia sẻ hình ảnh qua"))
     }
 
+    private fun clickFavorite() {
+        historyAdapter.modelCallback = { item, position, isFavorite ->
+            Log.d("TAG", "listener: $item")
+            Log.d("TAG", "listener: $isFavorite")
+            Log.d("TAG", "listener: ${item.isFavorite}")
+            if (item.isFavorite) {
+                lifecycleScope.launch {
+                    val qrFavoriteDao =
+                        QrRoomDatabase.getDataBase(this@HistoryActivity).qrFavoriteDao()
+                    qrFavoriteDao.insertFavoriteQr(
+                        QrFavoriteModel(
+                            id = item.id,
+                            imageString = item.imageString,
+                            imageBitmap = item.imageBitmap,
+                            titleTimeString = item.titleTimeString,
+                            titleString = item.titleString,
+                            timeString = item.timeString,
+                            linkString = item.linkString,
+                            phone = item.phone,
+                            message = item.message,
+                            email = item.email,
+                            topic = item.topic,
+                            content = item.content,
+                            document = item.document,
+                            fullName = item.fullName,
+                            workPlace = item.workPlace,
+                            address = item.address,
+                            note = item.note,
+                            networkName = item.networkName,
+                            password = item.password,
+                            typeWifi = item.typeWifi,
+                            latitude = item.latitude,
+                            longitude = item.longitude,
+                            query = item.query
+                        )
+                    )
+                }
+            } else {
+                lifecycleScope.launch {
+                    val qrDao = QrRoomDatabase.getDataBase(this@HistoryActivity).qrFavoriteDao()
+                    qrDao.deleteFavoriteQr(item.timeString)
+                    Log.d("TAG", "onClickDelete: $position")
+                    if (qrDao.getAllFavoriteQr().sortedByDescending { it.timeString }.isEmpty()) {
 
+                        mBinding.txtEmpty.visibility = View.VISIBLE
+                        mBinding.imgEmpty.visibility = View.VISIBLE
+                    } else {
+                        mBinding.imgEmpty.visibility = View.GONE
+                        mBinding.txtEmpty.visibility = View.GONE
+                    }
+                }
+            }
+            lifecycleScope.launch(Dispatchers.IO) {
+                val qrDao = QrRoomDatabase.getDataBase(this@HistoryActivity).qrDao()
+                val qrModel = qrDao.getItemById(item.id)
+                if (qrModel != null) {
+                    qrModel.isFavorite = item.isFavorite
+                    qrDao.updateItem(qrModel)
+                }
+            }
+
+
+        }
+
+
+    }
 }

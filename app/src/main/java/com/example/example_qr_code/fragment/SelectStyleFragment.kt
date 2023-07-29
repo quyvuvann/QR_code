@@ -4,19 +4,19 @@ import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.example_qr_code.CreateViewModel
+import com.example.example_qr_code.QrRoomDatabase
 import com.example.example_qr_code.R
-import com.example.example_qr_code.activity.FavoriteActivity
-import com.example.example_qr_code.activity.HistoryActivity
-import com.example.example_qr_code.activity.MainActivity
-import com.example.example_qr_code.activity.MyQRActivity
+import com.example.example_qr_code.activity.*
 import com.example.example_qr_code.adapter.CreateAdapter
 import com.example.example_qr_code.adapter.NavigationAdapter
 import com.example.example_qr_code.base.BaseFragment
 import com.example.example_qr_code.base.NavigationViewModel
 import com.example.example_qr_code.databinding.FragmentSelectStyleBinding
+import kotlinx.coroutines.launch
 
 class SelectStyleFragment : BaseFragment<FragmentSelectStyleBinding, NavigationViewModel>() {
     private val createAdapter = CreateAdapter()
@@ -48,7 +48,19 @@ class SelectStyleFragment : BaseFragment<FragmentSelectStyleBinding, NavigationV
                         startActivity(Intent(activityOwner, HistoryActivity::class.java))
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        startActivity(Intent(activityOwner, MyQRActivity::class.java))
+                        lifecycleScope.launch {
+                            val myDao = QrRoomDatabase.getDataBase(activityOwner).qrMyDao()
+                            if (myDao.getAllMyQr().size > 0) {
+                                startActivity(
+                                    Intent(activityOwner, ShowQRActivity::class.java)
+                                )
+                                destroyCategoryFragment()
+
+                            } else {
+                                startActivity(Intent(activityOwner, MyQRActivity::class.java))
+                                destroyCategoryFragment()
+                            }
+                        }
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
 
@@ -87,7 +99,7 @@ class SelectStyleFragment : BaseFragment<FragmentSelectStyleBinding, NavigationV
                     CreateViewModel.Tool.WIFI -> {
                         findNavController().navigate(R.id.action_selectStyleFragment_to_createdWifiFragment)
                     }
-                    CreateViewModel.Tool.LOCATION ->{
+                    CreateViewModel.Tool.LOCATION -> {
                         findNavController().navigate(R.id.action_selectStyleFragment_to_createdGeographyFragment)
                     }
                     else -> {}
@@ -96,8 +108,8 @@ class SelectStyleFragment : BaseFragment<FragmentSelectStyleBinding, NavigationV
         }
         mBinding.xToolBar.setToolbarClickListener(
             clickLeft = {
-            mBinding.drawerLayout.open()
-        },
+                mBinding.drawerLayout.open()
+            },
             clickRight = {}
         )
     }
@@ -111,7 +123,15 @@ class SelectStyleFragment : BaseFragment<FragmentSelectStyleBinding, NavigationV
         val toggle = ActionBarDrawerToggle(activityOwner, mBinding.drawerLayout, 0, 0)
         mBinding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+    }
 
+    private fun destroyCategoryFragment() {
+        val fragmentManager = activityOwner.supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        val currentFragment = fragmentManager.findFragmentById(R.id.selectStyleFragment)
+        if (currentFragment != null) {
+            transaction.detach(currentFragment).commit()
+        }
 
     }
 

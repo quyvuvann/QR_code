@@ -23,4 +23,9 @@ interface QrDAO {
 
     @Update
     fun updateItem(item: QrModel?)
+
+    @Query("SELECT * FROM qr_table ORDER BY id DESC LIMIT 1")
+    suspend fun getLatestData(): QrModel?
+    @Query("SELECT id FROM qr_table ORDER BY id DESC LIMIT 1")
+    fun getLastId(): Long
 }

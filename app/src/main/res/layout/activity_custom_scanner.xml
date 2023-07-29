@@ -23,17 +23,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:zxing_scanner_layout="@layout/custom_barcode_scanner"
-                tools:ignore="ResourceCycle">
+                tools:ignore="ResourceCycle"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp">
+
                 <com.example.example_qr_code.base.XToolbar
                     android:id="@+id/x_toolBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/dimens_30"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     app:xtb_iconLeft="@drawable/ic_menu_white"
                     app:xtb_iconRight="@drawable/ic_image_white"
                     app:xtb_visibilityLeft="visible" />
+
+                <SeekBar
+                    android:min="1"
+                    android:max="50"
+                    android:id="@+id/seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/dimens_60"
+                    android:layout_marginTop="@dimen/dimens_20"
+                    android:layout_marginEnd="@dimen/dimens_60"
+                    android:layout_marginBottom="@dimen/dimens_60"
+                    android:thumb="@drawable/seekbar_thumb_white_blu" />
+
+                <ImageView
+                    android:id="@+id/btn_zoom_out"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/dimens_30"
+                    android:layout_marginBottom="@dimen/dimens_56"
+                    tools:src="@drawable/ic_zoom_out" />
+
+                <ImageView
+                    android:id="@+id/btn_zoom_in"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="@dimen/dimens_30"
+                    android:layout_marginBottom="@dimen/dimens_56"
+                    tools:src="@drawable/ic_zoom_in" />
             </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
 

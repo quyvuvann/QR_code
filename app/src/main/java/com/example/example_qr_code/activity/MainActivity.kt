@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
@@ -42,6 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var barCodeScanner: BarcodeScanner? = null
     private var navigationAdapter: NavigationAdapter? = null
     private var uri: Uri? = null
+    private var uriReceiverCustom: Uri? = null
     private var uriQr: Uri? = null
     private val random = Random()
     val number = random.nextInt(1000000) + 1
@@ -51,11 +51,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun setUpView() {
         PermissionUtils.requestPermission()
-        if (PermissionUtils.checkCameraPermission(this)) {
-            scanCode()
-        } else {
-            PermissionUtils.requestCameraPermission(this)
-        }
+        PermissionUtils.requestCameraPermission(this)
+//        if (PermissionUtils.checkCameraPermission(this)) {
+//            scanCode()
+//        } else {
+//            PermissionUtils.requestCameraPermission(this)
+//        }
         Glide.with(this).load(R.drawable.ic_qrcode).into(findViewById(R.id.img_viewQR))
         Glide.with(this).load(R.drawable.ic_qrcode).into(findViewById(R.id.img_nav))
         setUpNavigation()
@@ -64,9 +65,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS).build()
 
         barCodeScanner = BarcodeScanning.getClient(barCodeScannerOptions!!)
-        val imageUr = intent.getParcelableExtra<Uri>("uriKey")
-        if (imageUr != null){
-            imageUri = imageUr
+        uriReceiverCustom = intent.getParcelableExtra<Uri>("uriKey")
+        if (uriReceiverCustom != null) {
+            imageUri = uriReceiverCustom
+            Glide.with(this).load(imageUri).into(mBinding.imgViewQR)
+            Log.d("TAG", "setUpView: $uriReceiverCustom")
+            detectResultFromImage()
         }
     }
 
@@ -105,9 +109,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     }
                     NavigationViewModel.Tool.FAVORITE -> {
                         startActivity(Intent(this@MainActivity, FavoriteActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.HISTORY -> {
                         startActivity(Intent(this@MainActivity, HistoryActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.MY_QR -> {
                         lifecycleScope.launch {
@@ -116,14 +122,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                                 startActivity(
                                     Intent(this@MainActivity, ShowQRActivity::class.java)
                                 )
+                                finish()
                             } else {
                                 startActivity(Intent(this@MainActivity, MyQRActivity::class.java))
+                                finish()
                             }
                         }
 
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
                         startActivity(Intent(this@MainActivity, Create2Activity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.SETTING -> {
                         showToast("Setting")
@@ -174,18 +183,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     @SuppressLint("SimpleDateFormat")
     private fun extractBarcodeQrCodeInfo(barcodes: List<Barcode>) {
-        val c = Calendar.getInstance()
-        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-        val strDate: String = sdf.format(c.time)
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy")
-        val date: String = dateFormat.format(c.time)
-//        val currentTime = Calendar.getInstance().calendarType
+
         for (barcode in barcodes) {
-            val bound = barcode.boundingBox
-            val corners = barcode.cornerPoints
+
             val rawValue = barcode.rawValue
-            val valueType = barcode.valueType
-            when (valueType) {
+            when (barcode.valueType) {
                 Barcode.TYPE_WIFI -> {
 
                     val typeWifi = barcode.wifi
@@ -199,25 +201,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     } else if (encryptionType == "3") {
                         encryptionType = "WEP"
                     }
-                    Log.d(
-                        "TAG",
-                        "extractBarcodeQrCodeInfo:  \"TYPE_WIFI \\nssid:$ssid \\npassword: $password \\nencryptionType: $encryptionType \\n\\nrawValue:$rawValue\""
-                    )
                     mBinding.txtResult.text =
-                        "TYPE_WIFI \nssid:$ssid \npassword: $password \nencryptionType: $encryptionType \n\nrawValue:$rawValue"
-//                    lifecycleScope.launch {
-//                        val daoQr = QrRoomDatabase.getDataBase(this@MainActivity).qrDao()
-//                        daoQr.insertQr(
-//                            QrModel(
-//                                imageString = R.drawable.ic_wifi,
-//                                titleTimeString = date,
-//                                titleString = "Wifi",
-//                                timeString = strDate,
-//                                linkString = password
-//
-//                            )
-//                        )
-//                    }
+                        "TYPE_WIFI \nssid:$ssid \npassword: $password \nencryptionType: $encryptionType\n"
 
                 }
                 Barcode.TYPE_URL -> {
@@ -225,19 +210,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     val title = "${typeUrl?.title}"
                     val url = "${typeUrl?.url}"
                     mBinding.txtResult.text =
-                        "TYPE_URL \ntitle: $title \nurl: $url \n\nrawValue: $rawValue"
-                    lifecycleScope.launch {
-                        val daoQr = QrRoomDatabase.getDataBase(this@MainActivity).qrDao()
-//                        daoQr.insertQr(
-//                            QrModel(
-//                                imageString = R.drawable.ic_link,
-//                                titleTimeString = date,
-//                                titleString = "Liên kết web",
-//                                timeString = strDate,
-//                                linkString = url
-//                            )
-//                        )
-                    }
+                        "TYPE_URL \ntitle: $title \nurl: $url \n"
+
                     uri = Uri.parse(url)
                 }
                 Barcode.TYPE_EMAIL -> {
@@ -250,13 +224,37 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }
                 Barcode.TYPE_CONTACT_INFO -> {
                     val typeContact = barcode.contactInfo
+                    val fullName = typeContact?.name?.formattedName
+                    val workPlace = typeContact?.organization
+                    val address = typeContact?.addresses?.joinToString("\n") { address ->
+                        address.addressLines.joinToString(", ")
+                    }
 
-                    val title = "${typeContact?.title}"
-                    val organization = "${typeContact?.organization}"
-                    val name = "${typeContact?.name?.first} ${typeContact?.name?.last}"
-                    val phone = "${typeContact?.name?.first} ${typeContact?.phones?.get(0)?.number}"
+                    val phoneNumber = typeContact?.phones?.firstOrNull()?.number
+                    val email = typeContact?.emails?.map { email ->
+                        email.address
+                    }?.joinToString("\n")
+                    val note = typeContact?.title
                     mBinding.txtResult.text =
-                        "TYPE_CONTACT_INFO \ntitle: $title \norganization: $organization \nname: $name \nphone: $phone \n\nrawValue: $rawValue"
+                        "TYPE_CONTACT_INFO \nfullName: $fullName \nworkPlace: $workPlace \n" + "Address: $address \n" + "Phone: $phoneNumber \n" + "Email: $email \n" + "Note: $note"
+                }
+                Barcode.TYPE_SMS -> {
+                    val typeContact = barcode.sms
+                    val phone = typeContact?.phoneNumber
+                    val mess = typeContact?.message
+                    mBinding.txtResult.text = "TYPE_SMS \nphone: $phone \nmess: $mess"
+                }
+                Barcode.TYPE_PHONE -> {
+                    val typeContact = barcode.phone
+                    val phone = typeContact?.number
+                    mBinding.txtResult.text = "TYPE_PHONE \nPhone number: $phone"
+                }
+                Barcode.TYPE_GEO -> {
+                    val typeContact = barcode.geoPoint
+                    val latitude = typeContact?.lat
+                    val longitude = typeContact?.lng
+                    mBinding.txtResult.text =
+                        "TYPE_GEO \n Latitude: $latitude \n Longitude: $longitude"
                 }
                 else -> {
                     mBinding.txtResult.text = "rawValue: $rawValue"
@@ -266,7 +264,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
 
-     fun selectImageGallery() {
+    fun selectImageGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         galleryActivityResultLauncher.launch(intent)
@@ -275,6 +273,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private val galleryActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
+                uriReceiverCustom = null
                 val data = result.data
                 imageUri = data?.data
                 Log.d("TAG", "image: $imageUri")
@@ -293,14 +292,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-        cameraActivityResultLauncher.launch(intent)
+//        scanCode()
+
+//        cameraActivityResultLauncher.launch(intent)
     }
 
     private var cameraActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
+                uriReceiverCustom = null
                 val data = result.data
-
                 Log.d("TAG", " cameraActivityResultLauncher:$imageUri ")
 //                mBinding.imgViewQR.setImageURI(imageUri)
                 Glide.with(this).load(imageUri).into(mBinding.imgViewQR)
@@ -337,18 +338,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    fun scanCode() {
+    private fun scanCode() {
         val options = ScanOptions().setOrientationLocked(false).setCaptureActivity(
             CustomScannerActivity::class.java
         )
         barcodeLauncher.launch(options)
     }
 
-    val barLauncher = registerForActivityResult(ScanContract()) { it ->
-        if (it.contents != null) {
-            Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
-        }
-    }
     private val barcodeLauncher = registerForActivityResult(
         ScanContract()
     ) { result: ScanIntentResult ->

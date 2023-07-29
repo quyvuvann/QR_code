@@ -1,24 +1,30 @@
 package com.example.example_qr_code.fragment
 
 import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Window
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.FileProvider
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.example_qr_code.*
-import com.example.example_qr_code.activity.FavoriteActivity
-import com.example.example_qr_code.activity.HistoryActivity
-import com.example.example_qr_code.activity.MainActivity
-import com.example.example_qr_code.activity.MyQRActivity
+import com.example.example_qr_code.activity.*
 import com.example.example_qr_code.adapter.NavigationAdapter
 import com.example.example_qr_code.base.BaseFragment
 import com.example.example_qr_code.base.NavigationViewModel
@@ -28,6 +34,8 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -39,6 +47,8 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
     private var navigationAdapter = NavigationAdapter()
     private var barCodeScanner: BarcodeScanner? = null
     private var barCodeScannerOptions: BarcodeScannerOptions? = null
+    private var barcodeDefault: Barcode? = null
+    private var isFavorite = false
     override fun getLayoutId(): Int = R.layout.fragment_show_qrcode
     private val random = Random()
     val number = random.nextInt(1000000) + 1
@@ -68,6 +78,9 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
         mBinding.btnShare.setOnClickListener {
             shareImage(createBitmap(mBinding.cardView, activityOwner))
         }
+        mBinding.xToolBar.setToolbarClickListener(clickLeft = {
+            mBinding.drawerLayout.open()
+        }, clickRight = {})
         Handler(Looper.getMainLooper()).postDelayed({
             detectResultFromImage()
         }, 300)
@@ -84,7 +97,22 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
                         startActivity(Intent(activityOwner, HistoryActivity::class.java))
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        startActivity(Intent(activityOwner, MyQRActivity::class.java))
+                        lifecycleScope.launch() {
+                            val myDao = QrRoomDatabase.getDataBase(activityOwner).qrMyDao()
+                            if (myDao.getAllMyQr().size > 0) {
+                                startActivity(
+                                    Intent(activityOwner, ShowQRActivity::class.java)
+                                )
+
+                            } else {
+                                startActivity(
+                                    Intent(
+                                        activityOwner, MyQRActivity::class.java
+                                    )
+                                )
+
+                            }
+                        }
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
                         startActivity(Intent(activityOwner, SelectStyleFragment::class.java))
@@ -97,6 +125,58 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
                     }
                 }
             }
+        }
+        mBinding.btnFavorite.setOnClickListener {
+            isFavorite = !isFavorite
+            if (isFavorite) {
+                mBinding.btnFavorite.setBackgroundResource(R.drawable.ic_star_fill)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val qrFavoriteDao = QrRoomDatabase.getDataBase(activityOwner).qrFavoriteDao()
+                    val qrDao = QrRoomDatabase.getDataBase(activityOwner).qrDao()
+                    val id = qrDao.getLastId()
+                    val item = qrDao.getItemById(id.toInt())
+                    qrFavoriteDao.insertFavoriteQr(
+                        QrFavoriteModel(
+                            imageString = item!!.imageString,
+                            imageBitmap = item.imageBitmap,
+                            titleTimeString = item.titleTimeString,
+                            titleString = item.titleString,
+                            timeString = item.timeString,
+                            linkString = item.linkString,
+                            phone = item.phone,
+                            message = item.message,
+                            email = item.email,
+                            topic = item.topic,
+                            content = item.content,
+                            document = item.document,
+                            fullName = item.fullName,
+                            workPlace = item.workPlace,
+                            address = item.address,
+                            note = item.note,
+                            networkName = item.networkName,
+                            password = item.password,
+                            typeWifi = item.typeWifi,
+                            latitude = item.latitude,
+                            longitude = item.longitude,
+                            query = item.query
+                        )
+                    )
+                }
+            } else {
+
+                mBinding.btnFavorite.setBackgroundResource(R.drawable.ic_star)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val qrFavoriteDao = QrRoomDatabase.getDataBase(activityOwner).qrFavoriteDao()
+                    val qrDao = QrRoomDatabase.getDataBase(activityOwner).qrDao()
+                    val id = qrDao.getLastId()
+                    val item = qrDao.getItemById(id.toInt())
+                    qrFavoriteDao.deleteFavoriteQr(item!!.timeString)
+                    Log.d("TAG", "listener: ${item.timeString}")
+                }
+            }
+        }
+        mBinding.btnEditText.setOnClickListener {
+            showDialogEditTittle(activityOwner)
         }
     }
 
@@ -157,6 +237,7 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
     private fun extractBarcodeQrCodeInfo(barcodes: List<Barcode>) {
         for (barcode in barcodes) {
+            barcodeDefault = barcode
             val rawValue = barcode.rawValue
             when (barcode.valueType) {
                 Barcode.TYPE_WIFI -> {
@@ -171,13 +252,8 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
                         3 -> R.string.wep
                         else -> R.string.un_know
                     }
-                    Log.d(
-                        "TAG",
-                        "extractBarcodeQrCodeInfo:  \"TYPE_WIFI \\nssid:$ssid \\npassword: $password \\nencryptionType: $encryptionType "
-                    )
                     mBinding.txtResult.text =
                         "TYPE_WIFI \nssid:$ssid \npassword: $password \nencryptionType: $encryptionType"
-
 
                 }
                 Barcode.TYPE_URL -> {
@@ -242,6 +318,54 @@ class ShowQrCodeFragment : BaseFragment<FragmentShowQrcodeBinding, CreateViewMod
                 }
             }
         }
+    }
+
+    private fun showDialogEditTittle(context: Context) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setContentView(R.layout.layout_dialog_rename)
+        val btnCancel = dialog.findViewById<TextView>(R.id.btn_cancel)
+        val btnConfirm = dialog.findViewById<TextView>(R.id.btn_confirm)
+        val editText = dialog.findViewById<EditText>(R.id.edt_feedback)
+        btnCancel.alpha = 0.3f
+        editText.hint = mBinding.txtTitle.text
+        editText.addTextChangedListener {
+            if (editText.text.isNotEmpty() || editText.text.isNotBlank()) {
+                btnConfirm.isEnabled = true
+                btnConfirm.setOnClickListener {
+                    mBinding.txtTitle.text = editText.text.toString()
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val qrFavoriteDao =
+                            QrRoomDatabase.getDataBase(activityOwner).qrFavoriteDao()
+                        val qrDao = QrRoomDatabase.getDataBase(activityOwner).qrDao()
+                        val idHistory = qrDao.getLastId()
+                        val idFavorite = qrFavoriteDao.getLastIdFavorite()
+                        if (isFavorite) {
+                            val qrModelFavorite = qrFavoriteDao.getItemById(idFavorite.toInt())
+                            if (qrModelFavorite != null) {
+                                qrModelFavorite.titleString = editText.text.toString()
+                                qrFavoriteDao.updateItem(qrModelFavorite)
+                            }
+                        }
+                        val qrModel = qrDao.getItemById(idHistory.toInt())
+                        if (qrModel != null) {
+                            qrModel.titleString = editText.text.toString()
+                            qrDao.updateItem(qrModel)
+                        }
+                    }
+                    dialog.dismiss()
+                }
+            } else {
+                btnConfirm.isEnabled = false
+            }
+        }
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
     }
 
     private fun setUpNavigation() {

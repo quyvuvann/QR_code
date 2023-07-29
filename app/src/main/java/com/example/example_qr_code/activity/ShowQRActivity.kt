@@ -119,18 +119,22 @@ class ShowQRActivity : BaseActivity<ActivityShowQrBinding>() {
                 when (item.toolId) {
                     NavigationViewModel.Tool.QR_CODE -> {
                         startActivity(Intent(this@ShowQRActivity, MainActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.FAVORITE -> {
                         startActivity(Intent(this@ShowQRActivity, FavoriteActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.HISTORY -> {
                         startActivity(Intent(this@ShowQRActivity, HistoryActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        startActivity(Intent(this@ShowQRActivity, MyQRActivity::class.java))
+//                        startActivity(Intent(this@ShowQRActivity, MyQRActivity::class.java))
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
-                        startActivity(Intent(this@ShowQRActivity, SelectStyleFragment::class.java))
+                        startActivity(Intent(this@ShowQRActivity, Create2Activity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.SETTING -> {
 
@@ -170,7 +174,6 @@ class ShowQRActivity : BaseActivity<ActivityShowQrBinding>() {
         val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
         val contentUri = Uri.fromFile(imageFile)
         mediaScanIntent.data = contentUri
-//        dataViewModel.setUriReceiver(contentUri)
         Log.d("TAG", "saveImage: $contentUri")
         sendBroadcast(mediaScanIntent)
 

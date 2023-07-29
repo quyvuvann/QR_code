@@ -21,9 +21,11 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.google.zxing.ResultPoint;
@@ -162,6 +164,7 @@ public class ViewfinderView extends View {
             paint.setAlpha(CURRENT_POINT_OPACITY);
             canvas.drawBitmap(resultBitmap, null, frame, paint);
         } else {
+            drawFrameBounds(canvas, frame);
             // If wanted, draw a red "laser scanner" line through the middle to show decoding is active
             if (laserVisibility) {
                 paint.setColor(laserColor);
@@ -183,8 +186,8 @@ public class ViewfinderView extends View {
                 float radius = POINT_SIZE / 2.0f;
                 for (final ResultPoint point : lastPossibleResultPoints) {
                     canvas.drawCircle(
-                             (int) (point.getX() * scaleX),
-                             (int) (point.getY() * scaleY),
+                            (int) (point.getX() * scaleX),
+                            (int) (point.getY() * scaleY),
                             radius, paint
                     );
                 }
@@ -218,6 +221,40 @@ public class ViewfinderView extends View {
                     frame.right + POINT_SIZE,
                     frame.bottom + POINT_SIZE);
         }
+    }
+
+    private void drawFrameBounds(Canvas canvas, Rect frame) {
+        float frameTop = frame.top;
+        float frameBottom = frame.bottom;
+        float frameLeft = frame.left;
+        float frameRight = frame.right;
+
+        paint.setColor(Color.parseColor("#1976D2"));
+        paint.setStyle(Paint.Style.FILL);
+        paint.setStrokeWidth(1f);
+
+        // Chiều dài/rộng của các góc
+        int width = frame.width();
+        int corLength = (int) (width * 0.07);
+        int corWidth = (int) (corLength * 0.2);
+        corWidth = Math.min(corWidth, 15);
+        Log.d(TAG, "drawFrameBounds:" + corWidth);
+        Log.d(TAG, "drawFrameBounds: "+ frameLeft);
+        Log.d(TAG, "drawFrameBounds: "+ frameTop);
+        Log.d(TAG, "drawFrameBounds: "+ frameBottom);
+        Log.d(TAG, "drawFrameBounds: "+ frameRight);
+
+        canvas.drawRect(frameLeft - corWidth, frameTop, frameLeft, frameTop + corLength, paint);
+        canvas.drawRect(frameLeft - corWidth, frameTop - corWidth, frameLeft + corLength, frameTop, paint);
+
+        canvas.drawRect(frameRight, frameTop, frameRight + corWidth, frameTop + corLength, paint);
+        canvas.drawRect(frameRight - corLength, frameTop - corWidth, frameRight + corWidth, frameTop, paint);
+
+        canvas.drawRect(frameLeft - corWidth, frameBottom - corLength, frameLeft, frameBottom, paint);
+        canvas.drawRect(frameLeft - corWidth, frameBottom, frameLeft + corLength, frameBottom + corWidth, paint);
+
+        canvas.drawRect(frameRight, frameBottom - corLength, frameRight + corWidth, frameBottom, paint);
+        canvas.drawRect(frameRight - corLength, frameBottom, frameRight + corWidth, frameBottom + corWidth, paint);
     }
 
     public void drawViewfinder() {

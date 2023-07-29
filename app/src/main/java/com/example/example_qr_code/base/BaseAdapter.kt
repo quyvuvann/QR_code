@@ -10,6 +10,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.example_qr_code.BR
+import com.example.example_qr_code.activity.Create2Activity
+import kotlinx.coroutines.CoroutineScope
 
 
 abstract class BaseAdapter<T : Any>(
@@ -46,6 +48,8 @@ abstract class BaseAdapter<T : Any>(
     private val selectedPositions = SparseBooleanArray()
     private var hiddenList = listOf<Int>()
 
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
 
         if (!::inflater.isInitialized) {
@@ -63,7 +67,7 @@ abstract class BaseAdapter<T : Any>(
             setVariable(BR.item, data[position])
             setVariable(BR.position, position)
             setVariable(BR.itemListener, listener)
-//        setVariable(BR.itemSelected,hiddenList)
+//            setVariable(BR.itemSelected, hiddenList)
 //        if (singleSelect) {
 //            setVariable(BR.itemSelected, selectedItemPosition == position)
             val context = root.context as LifecycleOwner

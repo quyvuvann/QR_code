@@ -48,9 +48,9 @@ object PermissionUtils {
         val resultCamera = (ContextCompat.checkSelfPermission(
             context, android.Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED)
-//        val resultStorage = (ContextCompat.checkSelfPermission(
-//            context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-//        ) == PackageManager.PERMISSION_GRANTED)
+        val resultStorage = (ContextCompat.checkSelfPermission(
+            context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED)
         return resultCamera
     }
 

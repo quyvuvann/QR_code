@@ -58,18 +58,21 @@ class MyQRActivity : BaseActivity<ActivityMyQrBinding>() {
                 when (item.toolId) {
                     NavigationViewModel.Tool.QR_CODE -> {
                         startActivity(Intent(this@MyQRActivity, MainActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.FAVORITE -> {
                         startActivity(Intent(this@MyQRActivity, FavoriteActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.HISTORY -> {
                         startActivity(Intent(this@MyQRActivity, HistoryActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.MY_QR -> {
 
                     }
                     NavigationViewModel.Tool.CREATED_QR -> {
-                        startActivity(Intent(this@MyQRActivity, SelectStyleFragment::class.java))
+                       mBinding.drawerLayout.open()
                     }
                     NavigationViewModel.Tool.SETTING -> {
 

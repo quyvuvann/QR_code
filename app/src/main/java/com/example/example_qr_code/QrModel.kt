@@ -29,6 +29,7 @@ class QrModel (
     @ColumnInfo(name = "typeWifi") val typeWifi:String,
     @ColumnInfo(name = "latitude") val latitude:String,
     @ColumnInfo(name = "longitude") val longitude:String,
-    @ColumnInfo(name = "query") val query:String
+    @ColumnInfo(name = "query") val query:String,
+    @ColumnInfo(name = "isFavorite") var isFavorite:Boolean = false,
 
-){}
+    ){}

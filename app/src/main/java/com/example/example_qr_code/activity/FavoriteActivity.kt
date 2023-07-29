@@ -24,6 +24,7 @@ import com.example.example_qr_code.adapter.NavigationAdapter
 import com.example.example_qr_code.base.BaseActivity
 import com.example.example_qr_code.base.NavigationViewModel
 import com.example.example_qr_code.databinding.ActivityFavoriteBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -68,18 +69,31 @@ class FavoriteActivity : BaseActivity<ActivityFavoriteBinding>() {
                 when (item.toolId) {
                     NavigationViewModel.Tool.QR_CODE -> {
                         startActivity(Intent(this@FavoriteActivity, MainActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.FAVORITE -> {
 
                     }
                     NavigationViewModel.Tool.HISTORY -> {
                         startActivity(Intent(this@FavoriteActivity, HistoryActivity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.MY_QR -> {
-                        startActivity(Intent(this@FavoriteActivity, MyQRActivity::class.java))
-                    }
+                        lifecycleScope.launch {
+                            val myDao = QrRoomDatabase.getDataBase(this@FavoriteActivity).qrMyDao()
+                            if (myDao.getAllMyQr().size > 0) {
+                                startActivity(
+                                    Intent(this@FavoriteActivity, ShowQRActivity::class.java)
+                                )
+                                finish()
+                            } else {
+                                startActivity(Intent(this@FavoriteActivity, MyQRActivity::class.java))
+                                finish()
+                            }
+                        }                    }
                     NavigationViewModel.Tool.CREATED_QR -> {
-                        showToast("Create")
+                        startActivity(Intent(this@FavoriteActivity, Create2Activity::class.java))
+                        finish()
                     }
                     NavigationViewModel.Tool.SETTING -> {
                         showToast("Setting")
@@ -163,6 +177,15 @@ class FavoriteActivity : BaseActivity<ActivityFavoriteBinding>() {
                 mBinding.rcvView.removeViewAt(position)
 
                 favoriteAdapter.notifyDataSetChanged()
+                lifecycleScope.launch(Dispatchers.IO){
+                    val qrDao = QrRoomDatabase.getDataBase(this@FavoriteActivity).qrDao()
+                    val qrModel = qrDao.getItemById(item.id)
+                    if (qrModel != null) {
+                        qrModel.isFavorite = false
+                        qrDao.updateItem(qrModel)
+                    }
+                }
+
 
             }
 

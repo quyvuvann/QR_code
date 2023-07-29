@@ -11,7 +11,7 @@ class QrFavoriteModel (
     @ColumnInfo(name = "imageString") val imageString:Int,
     @ColumnInfo(name = "imageBitmap") val imageBitmap:String,
     @ColumnInfo(name = "titleTimeString") val titleTimeString: String,
-    @ColumnInfo(name = "titleString") val titleString:String,
+    @ColumnInfo(name = "titleString") var titleString:String,
     @ColumnInfo(name = "timeString") val timeString:String,
     @ColumnInfo(name = "linkString") val linkString:String,
     @ColumnInfo(name = "phone") val phone:String,
@@ -29,6 +29,7 @@ class QrFavoriteModel (
     @ColumnInfo(name = "typeWifi") val typeWifi:String,
     @ColumnInfo(name = "latitude") val latitude:String,
     @ColumnInfo(name = "longitude") val longitude:String,
-    @ColumnInfo(name = "query") val query:String
+    @ColumnInfo(name = "query") val query:String,
+    @ColumnInfo(name = "isFavorite") val isFavorite:Boolean = true
 
 ){}
